@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Java Loops, Methods &amp; Arrays</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f1e8; --surface:#fffdf8; --surface2:#f0ebdf; --ink:#1f1d18; --muted:#6c675b; --line:#e2dccd;
+  --code-bg:#1d1f25; --code-ink:#e6e3da; --code-line:#2b2e36; --code-num:#6a6f7c;
+  --ok:#1e8a4c; --ok-bg:#e3f4ea; --bad:#c23b2e; --bad-bg:#fbe7e4; --warn:#a86a00; --warn-bg:#fdf1d8;
+  --loops:#e0662a; --methods:#0f8b7d; --arrays:#6b4fd8; --arrays2d:#1f6fd1;
+  --accent:#e0662a; --accent-soft:color-mix(in srgb,var(--accent) 12%,transparent);
+  --radius:14px; --shadow:0 1px 0 rgba(0,0,0,.04),0 8px 24px -12px rgba(40,30,10,.18);
+  --font-head:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --font-body:"IBM Plex Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,"Cascadia Code",Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#14151a; --surface:#1c1e24; --surface2:#23262d; --ink:#ebe7dd; --muted:#9b968a; --line:#2e313a;
+    --ok:#4cc27e; --ok-bg:#16301f; --bad:#ff7a6b; --bad-bg:#3a1c19; --warn:#f0b445; --warn-bg:#36290f;
+    --shadow:0 1px 0 rgba(255,255,255,.03),0 10px 30px -14px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14151a; --surface:#1c1e24; --surface2:#23262d; --ink:#ebe7dd; --muted:#9b968a; --line:#2e313a;
+  --ok:#4cc27e; --ok-bg:#16301f; --bad:#ff7a6b; --bad-bg:#3a1c19; --warn:#f0b445; --warn-bg:#36290f;
+  --shadow:0 1px 0 rgba(255,255,255,.03),0 10px 30px -14px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 var(--font-body);-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.15;margin:0 0 .5em;letter-spacing:-.01em}
+h2{font-size:1.75rem} h3{font-size:1.25rem;margin-top:1.6em} h4{font-size:1rem}
+p{margin:.4em 0 .9em}
+a{color:var(--accent)}
+code{font-family:var(--font-mono);font-size:.88em;background:var(--surface2);padding:.1em .38em;border-radius:6px}
+button{font:inherit;cursor:pointer}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+
+/* ---------- top bar ---------- */
+.topbar{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;gap:12px;height:64px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--font-head);font-weight:800;font-size:1.05rem;text-decoration:none;color:var(--ink);white-space:nowrap}
+.brand .logo{width:34px;height:34px;border-radius:10px;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-family:var(--font-mono);font-size:.8rem}
+.tabs{display:flex;gap:4px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs a{display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:999px;color:var(--muted);text-decoration:none;font-weight:600;font-size:.9rem;white-space:nowrap}
+.tabs a .dot{width:8px;height:8px;border-radius:50%;background:var(--c)}
+.tabs a:hover{color:var(--ink);background:var(--surface2)}
+.tabs a.active{color:var(--ink);background:var(--surface);box-shadow:var(--shadow)}
+.icon-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);width:38px;height:38px;border-radius:10px;display:grid;place-items:center;flex:none}
+
+/* ---------- home ---------- */
+.hero{padding:56px 0 24px}
+.hero .kicker{font-family:var(--font-mono);font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+.hero h1{font-size:clamp(2.2rem,5.5vw,4rem);font-weight:800;max-width:15ch;margin:.25em 0 .3em}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--loops),var(--methods),var(--arrays),var(--arrays2d));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{font-size:1.15rem;color:var(--muted);max-width:60ch}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin:28px 0}
+.tcard{position:relative;display:flex;flex-direction:column;gap:8px;padding:22px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--line);text-decoration:none;color:var(--ink);box-shadow:var(--shadow);transition:transform .15s,border-color .15s;overflow:hidden}
+.tcard:hover{transform:translateY(-3px);border-color:var(--c)}
+.tcard::before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:var(--c)}
+.tcard .num{font-family:var(--font-mono);color:var(--c);font-weight:600;font-size:.85rem}
+.tcard h3{margin:0;font-size:1.35rem}
+.tcard p{margin:0;color:var(--muted);font-size:.93rem}
+.tcard .prog{margin-top:auto;padding-top:10px;font-size:.82rem;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+.bar{height:6px;border-radius:99px;background:var(--surface2);overflow:hidden}
+.bar>i{display:block;height:100%;width:0;background:var(--c,var(--accent));border-radius:99px;transition:width .4s}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:8px 0 60px}
+.legend div{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:12px;background:var(--surface2);font-size:.9rem}
+.legend b{display:block;font-family:var(--font-head)}
+.legend .ic{font-size:1.3rem;line-height:1}
+
+/* ---------- topic layout ---------- */
+.topic{display:none;--accent-soft:color-mix(in srgb,var(--accent) 13%,transparent)}
+.topic.show{display:block}
+.topic-hero{padding:40px 0 20px;border-bottom:1px solid var(--line);margin-bottom:28px}
+.topic-hero .num{font-family:var(--font-mono);color:var(--accent);font-weight:600}
+.topic-hero h1{font-size:clamp(2rem,4.5vw,3.2rem);font-weight:800;margin:.15em 0 .2em}
+.topic-hero p{color:var(--muted);max-width:65ch;font-size:1.05rem;margin:0}
+.layout{display:grid;grid-template-columns:210px 1fr;gap:36px;align-items:start}
+.toc{position:sticky;top:84px;display:flex;flex-direction:column;gap:2px}
+.toc a{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;color:var(--muted);text-decoration:none;font-size:.92rem;font-weight:500}
+.toc a:hover{background:var(--surface2);color:var(--ink)}
+.toc a .ck{width:18px;height:18px;border-radius:50%;border:2px solid var(--line);flex:none;display:grid;place-items:center;font-size:.65rem;color:transparent}
+.toc a.done .ck{background:var(--accent);border-color:var(--accent);color:#fff}
+.toc a.here{color:var(--ink);background:var(--surface)}
+.toc .toc-prog{margin:12px 10px 0;font-size:.8rem;color:var(--muted)}
+.content{min-width:0}
+.block{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px;margin-bottom:24px;box-shadow:var(--shadow)}
+.block>h2{display:flex;align-items:center;gap:12px}
+.block>h2 .tag{font-family:var(--font-mono);font-size:.78rem;color:#fff;background:var(--accent);padding:4px 9px;border-radius:8px;letter-spacing:.04em}
+.sub{color:var(--muted);margin-top:-.3em}
+.objectives{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.objectives li{display:flex;gap:14px;align-items:flex-start;padding:12px 16px;background:var(--surface2);border-radius:12px}
+.objectives li::before{content:attr(data-n);font-family:var(--font-mono);font-weight:600;color:var(--accent);flex:none}
+.callout{border-left:4px solid var(--accent);background:var(--accent-soft);padding:12px 16px;border-radius:0 12px 12px 0;margin:14px 0}
+.callout.warn{border-color:var(--warn);background:var(--warn-bg)}
+.callout b:first-child{font-family:var(--font-head)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid2>*,.io>*{min-width:0}
+.pill{display:inline-block;font-family:var(--font-mono);font-size:.75rem;padding:2px 8px;border-radius:99px;background:var(--accent-soft);color:var(--accent);font-weight:600}
+table.simple{width:100%;border-collapse:collapse;font-size:.93rem;margin:10px 0}
+table.simple th,table.simple td{border-bottom:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top}
+table.simple th{font-family:var(--font-head);background:var(--surface2)}
+.flip-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:12px 0}
+.flip{perspective:900px;height:150px;cursor:pointer}
+.flip .in{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.flip.on .in{transform:rotateY(180deg)}
+.flip .f,.flip .b{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;padding:14px;display:flex;flex-direction:column;justify-content:center;font-size:.92rem}
+.flip .f{background:var(--surface2);border:1px dashed var(--line)}
+.flip .f b{font-family:var(--font-head);font-size:1.05rem}
+.flip .f small{color:var(--muted);margin-top:6px}
+.flip .b{background:var(--accent);color:#fff;transform:rotateY(180deg);font-size:.98rem;line-height:1.5}
+.flip .b code{background:rgba(255,255,255,.2);color:#fff}
+
+/* ---------- code ---------- */
+.code{background:var(--code-bg);color:var(--code-ink);border-radius:12px;font:13.5px/1.6 var(--font-mono);overflow:auto;margin:0}
+.code .ln{display:flex;padding:0 14px 0 0;min-height:1.6em;white-space:pre}
+.code .ln:first-child{padding-top:12px}.code .ln:last-child{padding-bottom:12px}
+.code .num{width:42px;flex:none;text-align:right;padding-right:14px;color:var(--code-num);user-select:none}
+.code .ln.cur{background:color-mix(in srgb,var(--accent) 32%,transparent);box-shadow:inset 3px 0 0 var(--accent)}
+.code .ln.cur .num{color:#fff}
+.code .k{color:#ff9d6b}.code .s{color:#a8d977}.code .n{color:#d7a6ff}.code .c{color:#7d8494;font-style:italic}.code .t{color:#66d1e8}.code .f{color:#ffd479}
+.cbox{border-radius:12px;overflow:hidden;border:1px solid var(--line);margin:14px 0;background:var(--code-bg)}
+.cbox .bar-top{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#262931;color:#c9c5ba;font-size:.82rem}
+.cbox .bar-top .dots{display:flex;gap:5px}.cbox .bar-top .dots i{width:10px;height:10px;border-radius:50%;background:#555}
+.cbox .bar-top .dots i:nth-child(1){background:#ff6058}.cbox .bar-top .dots i:nth-child(2){background:#ffbd2e}.cbox .bar-top .dots i:nth-child(3){background:#28c941}
+.cbox .bar-top .ttl{flex:1;font-family:var(--font-mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cbox .code{border-radius:0}
+.mini-btn{border:1px solid #3a3e48;background:#2f333c;color:#e6e3da;border-radius:7px;padding:3px 10px;font-size:.78rem;font-family:var(--font-body)}
+.mini-btn:hover{background:#3a3f4a}
+.mini-btn.run{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+.console{display:none;border-top:1px solid #333742;background:#121318;color:#9ef0b0;font:13px/1.55 var(--font-mono);padding:10px 14px 12px;white-space:pre-wrap;min-height:2.6em}
+.console.show{display:block}
+.console::before{content:"OUTPUT";display:block;color:#6a6f7c;font-size:.7rem;letter-spacing:.12em;margin-bottom:4px}
+.predict-hint{font-size:.78rem;color:#9b968a;font-style:italic}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 14px;border-radius:10px;font-weight:600;font-size:.9rem}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.ghost{background:transparent}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+
+/* ---------- tracer ---------- */
+.tracer{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin:18px 0;background:var(--surface2)}
+.tr-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--surface)}
+.tr-head b{font-family:var(--font-head);font-size:1.05rem}
+.tr-count{font-family:var(--font-mono);font-size:.82rem;color:var(--muted);white-space:nowrap}
+.tr-predict{padding:12px 16px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.88rem}
+.tr-predict textarea{flex:1;min-width:200px;font:13px var(--font-mono);border:1px solid var(--line);border-radius:8px;padding:6px 8px;background:var(--surface);color:var(--ink);resize:vertical}
+.tr-body{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr)}
+.tr-body .code{border-radius:0;height:100%}
+.tr-side{padding:14px 16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.tr-side h4{margin:0;font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-family:var(--font-body)}
+.tr-note{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;padding:10px 12px;font-size:.92rem;min-height:3.2em}
+.tr-vars{display:flex;flex-direction:column;gap:8px}
+.var{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:var(--font-mono);font-size:.86rem}
+.var .nm{color:var(--muted);min-width:56px}
+.var .vl{background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:2px 9px;transition:background .3s}
+.var.chg .vl{background:var(--warn-bg);border-color:var(--warn)}
+.arr{display:flex;gap:3px;flex-wrap:wrap}
+.arr .cell{display:flex;flex-direction:column;align-items:center}
+.arr .cell span{min-width:36px;text-align:center;padding:3px 6px;background:var(--surface);border:1px solid var(--line);border-radius:6px}
+.arr .cell small{font-size:.66rem;color:var(--muted)}
+.arr .cell.hl span{background:var(--accent);border-color:var(--accent);color:#fff}
+.g2{border-collapse:separate;border-spacing:3px;font-family:var(--font-mono);font-size:.82rem}
+.g2 td{min-width:34px;text-align:center;padding:3px 6px;background:var(--surface);border:1px solid var(--line);border-radius:6px}
+.g2 th{font-weight:400;font-size:.66rem;color:var(--muted);padding:0 2px}
+.g2 td.hl{background:var(--accent);border-color:var(--accent);color:#fff}
+.g2 td.row-hl{background:var(--accent-soft)}
+.tr-out{margin:0;background:#121318;color:#9ef0b0;border-radius:8px;padding:10px 12px;font:13px/1.5 var(--font-mono);min-height:3em;white-space:pre-wrap;max-height:180px;overflow:auto}
+.tr-ctrl{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:12px 16px;border-top:1px solid var(--line);background:var(--surface)}
+.tr-ctrl input[type=range]{flex:1;min-width:120px;accent-color:var(--accent)}
+.tr-result{display:none;padding:12px 16px;border-top:1px solid var(--line);font-size:.92rem}
+.tr-result.show{display:block}
+.tr-result.ok{background:var(--ok-bg);color:var(--ok)}
+.tr-result.bad{background:var(--bad-bg);color:var(--bad)}
+.kbd-tip{font-size:.75rem;color:var(--muted);margin-left:auto}
+
+/* ---------- quiz ---------- */
+.quiz-head{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.quiz-score{font-family:var(--font-head);font-size:1.1rem}
+.quiz-head .bar{flex:1;min-width:160px}
+.q{border:1px solid var(--line);border-radius:12px;padding:18px;margin:12px 0;background:var(--surface)}
+.q .qn{font-family:var(--font-mono);font-size:.78rem;color:var(--accent);font-weight:600}
+.q .qt{font-weight:600;margin:4px 0 10px}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:12px;align-items:center;text-align:left;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:10px 12px;font-size:.95rem;transition:border-color .15s,background .15s}
+.opt:hover:not(:disabled){border-color:var(--accent);background:var(--accent-soft)}
+.opt .L{font-family:var(--font-mono);font-weight:600;width:26px;height:26px;border-radius:7px;display:grid;place-items:center;background:var(--surface2);flex:none;font-size:.8rem}
+.opt:disabled{cursor:default}
+.opt.right{border-color:var(--ok);background:var(--ok-bg)}
+.opt.right .L{background:var(--ok);color:#fff}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.opt.wrong .L{background:var(--bad);color:#fff}
+.opt.dim{opacity:.55}
+.fb{display:none;margin-top:10px;padding:10px 12px;border-radius:10px;font-size:.92rem}
+.fb.show{display:block}
+.fb.ok{background:var(--ok-bg);color:var(--ok)}
+.fb.bad{background:var(--bad-bg);color:var(--bad)}
+.fb span{color:var(--ink)}
+.quiz-done{display:none;text-align:center;padding:22px;border-radius:12px;background:var(--accent-soft);margin-top:14px}
+.quiz-done.show{display:block}
+.quiz-done .big{font-family:var(--font-head);font-size:2.4rem;font-weight:800;color:var(--accent)}
+.quick{margin:18px 0}
+.quick .q{border-style:dashed;background:var(--surface2)}
+.quick .q .qn::before{content:"⚡ "}
+
+/* ---------- paper ---------- */
+.paper-item,.ide-item{border:1px solid var(--line);border-radius:12px;padding:20px;margin:16px 0;background:var(--surface)}
+.item-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:6px}
+.item-head h3{margin:0;font-size:1.15rem}
+.lvl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:3px 8px;border-radius:6px;background:var(--surface2);color:var(--muted)}
+.lvl.easy{background:var(--ok-bg);color:var(--ok)}.lvl.medium{background:var(--warn-bg);color:var(--warn)}.lvl.hard{background:var(--bad-bg);color:var(--bad)}
+.ttable-wrap{overflow-x:auto;margin:12px 0}
+table.ttable{border-collapse:collapse;font-family:var(--font-mono);font-size:.86rem;min-width:100%}
+table.ttable th{background:var(--surface2);font-family:var(--font-body);font-weight:600;font-size:.82rem;padding:8px 10px;border:1px solid var(--line);text-align:center;white-space:nowrap}
+table.ttable td{border:1px solid var(--line);padding:3px;text-align:center}
+table.ttable td.given{background:var(--surface2);padding:6px 10px;color:var(--muted)}
+table.ttable input{width:100%;min-width:64px;border:0;background:transparent;color:var(--ink);font:inherit;text-align:center;padding:6px 4px;border-radius:5px}
+table.ttable input:focus{outline:2px solid var(--accent)}
+table.ttable input.ok{background:var(--ok-bg);color:var(--ok);font-weight:600}
+table.ttable input.bad{background:var(--bad-bg);color:var(--bad)}
+.out-box{width:100%;font:13px/1.5 var(--font-mono);border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--surface2);color:var(--ink);resize:vertical}
+.out-box.ok{border-color:var(--ok);background:var(--ok-bg)}.out-box.bad{border-color:var(--bad);background:var(--bad-bg)}
+.lbl{font-size:.82rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin:14px 0 6px;display:block}
+.key{display:none;margin-top:8px;padding:10px 12px;border-radius:10px;background:var(--ok-bg);color:var(--ink);font-size:.92rem}
+.key.show{display:block}
+.key pre{margin:6px 0 0;font:13px/1.5 var(--font-mono);white-space:pre-wrap}
+.qa{margin:10px 0;padding:12px 14px;border-radius:10px;background:var(--surface2)}
+.qa .ask{font-weight:600}
+.status{font-size:.88rem;font-weight:600;margin-left:6px}
+.status.ok{color:var(--ok)}.status.bad{color:var(--bad)}
+
+/* ---------- IDE ---------- */
+.io{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.io pre{margin:0;background:#121318;color:#9ef0b0;border-radius:10px;padding:10px 12px;font:13px/1.5 var(--font-mono);white-space:pre-wrap}
+.io pre .in{color:#ffd479}
+.hints{margin-top:12px}
+.hint{display:none;margin:8px 0;padding:10px 12px;border-radius:10px;background:var(--warn-bg);font-size:.92rem}
+.hint.show{display:block}
+.hint b{color:var(--warn)}
+details.sol{margin-top:12px;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+details.sol summary{padding:10px 14px;cursor:pointer;font-weight:600;background:var(--surface2)}
+details.sol .cbox{margin:0;border:0;border-radius:0}
+.checklist{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:6px}
+.checklist label{display:flex;gap:10px;align-items:center;font-size:.92rem;cursor:pointer}
+.checklist input{accent-color:var(--accent);width:17px;height:17px}
+
+/* ---------- labs ---------- */
+.lab{border:2px solid var(--accent);border-radius:var(--radius);padding:20px;margin:18px 0;background:linear-gradient(180deg,var(--accent-soft),transparent 60%)}
+.lab h3{margin-top:0;display:flex;align-items:center;gap:10px}
+.lab-controls{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-bottom:14px}
+.lab-controls label{display:flex;flex-direction:column;gap:4px;font-size:.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.lab-controls select,.lab-controls input{font:14px var(--font-mono);padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);min-width:72px}
+.lab-controls input[type=number]{width:84px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;min-height:36px}
+.chip{font-family:var(--font-mono);padding:4px 10px;border-radius:8px;background:var(--surface);border:1px solid var(--line);animation:pop .25s both}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:none;opacity:1}}
+.lab-stat{display:flex;gap:16px;flex-wrap:wrap;font-size:.9rem;margin-top:10px}
+.lab-stat b{font-family:var(--font-mono)}
+.alert{padding:10px 12px;border-radius:10px;background:var(--bad-bg);color:var(--bad);font-weight:600;margin-top:10px;display:none}
+.alert.show{display:block}
+.viz-cells{display:flex;gap:4px;flex-wrap:wrap;margin:10px 0}
+.viz-cell{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
+.viz-cell .box{width:52px;height:52px;display:grid;place-items:center;border:2px solid var(--line);border-radius:10px;background:var(--surface);font:600 1rem var(--font-mono);transition:all .2s}
+.viz-cell .idx{font:12px var(--font-mono);color:var(--muted)}
+.viz-cell .mon{font-size:.7rem;color:var(--muted)}
+.viz-cell.sel .box{border-color:var(--accent);background:var(--accent);color:#fff;transform:translateY(-4px)}
+.expr{font:15px var(--font-mono);padding:10px 14px;background:var(--code-bg);color:var(--code-ink);border-radius:10px;display:inline-block;margin:6px 0}
+.expr .res{color:#a8d977}.expr .err{color:#ff7a6b}
+.gridviz{border-collapse:separate;border-spacing:5px;margin:8px 0}
+.gridviz td{width:58px;height:50px;text-align:center;font:600 1rem var(--font-mono);background:var(--surface);border:2px solid var(--line);border-radius:10px;cursor:pointer;transition:all .2s}
+.gridviz th{font:12px var(--font-mono);color:var(--muted);font-weight:400;padding:0 4px}
+.gridviz th.rowh{cursor:pointer;text-decoration:underline dotted}
+.gridviz td.sel{background:var(--accent);border-color:var(--accent);color:#fff;transform:scale(1.06)}
+.gridviz td.row{background:var(--accent-soft);border-color:var(--accent)}
+.gridviz td.visited{background:var(--accent-soft)}
+.anat{font:clamp(13px,2.2vw,17px)/2.2 var(--font-mono);background:var(--code-bg);color:var(--code-ink);padding:16px;border-radius:12px;overflow-x:auto;white-space:nowrap}
+.anat button{font:inherit;background:transparent;color:inherit;border:0;border-bottom:2px dashed #6a6f7c;padding:0 2px;margin:0 1px;border-radius:4px}
+.anat button:hover,.anat button.on{background:var(--accent);color:#fff;border-color:transparent}
+.anat-exp{min-height:3.5em;margin-top:10px;padding:12px 14px;border-radius:10px;background:var(--surface2);font-size:.95rem}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:10px}
+.seg button{border:0;background:var(--surface);color:var(--muted);padding:8px 14px;font-weight:600;font-size:.88rem}
+.seg button.on{background:var(--accent);color:#fff}
+.pager{display:flex;justify-content:space-between;gap:12px;margin:28px 0 60px}
+.pager a{flex:1;padding:16px 18px;border:1px solid var(--line);border-radius:12px;text-decoration:none;color:var(--ink);background:var(--surface)}
+.pager a:hover{border-color:var(--accent)}
+.pager small{display:block;color:var(--muted)}
+.pager a.next{text-align:right}
+footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--muted);font-size:.85rem}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:.9rem;transition:transform .25s;z-index:100}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .toc{position:sticky;top:64px;z-index:20;flex-direction:row;overflow-x:auto;background:var(--bg);padding:8px 0;margin:0 -16px;padding-left:16px;scrollbar-width:none}
+  .toc::-webkit-scrollbar{display:none}
+  .toc a{white-space:nowrap;background:var(--surface);border:1px solid var(--line)}
+  .toc .toc-prog{display:none}
+  .tr-body{grid-template-columns:1fr}
+  .grid2,.io{grid-template-columns:1fr}
+  .block{padding:20px 16px}
+  .brand span.full{display:none}
+}
+@media (max-width:520px){.tabs a .dot{display:none}.tabs a{padding:6px 8px;font-size:.8rem}.kbd-tip{display:none}.brand .logo{width:30px;height:30px}}
+
+/* ---------- print (paper worksheet) ---------- */
+@media print{
+  :root{--bg:#fff;--surface:#fff;--surface2:#f3f3f3;--ink:#000;--muted:#444;--line:#999}
+  body.print-paper .topbar,body.print-paper .toc,body.print-paper .topic-hero p,body.print-paper .block:not(.paper-block),body.print-paper .pager,body.print-paper footer,body.print-paper #home,body.print-paper .btn-row,body.print-paper .key,body.print-paper .no-print{display:none!important}
+  body.print-paper .layout{display:block}
+  body.print-paper .block{box-shadow:none;border:0;padding:0}
+  body.print-paper .paper-item{break-inside:avoid;border:1px solid #999}
+  body.print-paper table.ttable input{border-bottom:0;min-height:26px}
+  body.print-paper .out-box{min-height:90px;background:#fff}
+  .code{background:#fff!important;color:#000!important;border:1px solid #999}
+  .code .k,.code .s,.code .n,.code .c,.code .t,.code .f{color:#000!important}
+  .code .num{color:#777!important}
+}
+
+/* show <=, >=, != exactly as typed (no font ligatures) */
+*,*::before,*::after{font-variant-ligatures:none;font-feature-settings:"liga" 0,"calt" 0}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a href="#home" class="brand"><span class="logo">{ }</span><span class="full">Java Essentials</span></a>
+    <nav class="tabs" id="tabs">
+      <a href="#loops" style="--c:var(--loops)"><span class="dot"></span><span class="lbl">Loops</span></a>
+      <a href="#methods" style="--c:var(--methods)"><span class="dot"></span><span class="lbl">Methods</span></a>
+      <a href="#arrays" style="--c:var(--arrays)"><span class="dot"></span><span class="lbl">1D Arrays</span></a>
+      <a href="#arrays2d" style="--c:var(--arrays2d)"><span class="dot"></span><span class="lbl">2D Arrays</span></a>
+    </nav>
+    <button class="icon-btn" id="themeBtn" title="Toggle light/dark theme" aria-label="Toggle theme">🌓</button>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ======================= HOME ======================= -->
+<section id="home" class="topic show">
+  <div class="hero">
+    <div class="kicker">Interactive learning module · Java programming</div>
+    <h1>Loops, Methods &amp; <em>Arrays</em> in Java</h1>
+    <p class="lead">Four lessons you can click, run and step through, with code examples you can copy into your IDE.</p>
+  </div>
+  <div class="cards" id="homeCards">
+    <a class="tcard" href="#loops" style="--c:var(--loops)"><span class="num">LESSON 01</span><h3>Looping Statements</h3><p>while, do-while, for, break and continue. Make the computer repeat work for you.</p><div class="prog" data-prog="loops"></div></a>
+    <a class="tcard" href="#methods" style="--c:var(--methods)"><span class="num">LESSON 02</span><h3>Methods</h3><p>Parameters, arguments, return values, overloading and scope. Write code once, use it many times.</p><div class="prog" data-prog="methods"></div></a>
+    <a class="tcard" href="#arrays" style="--c:var(--arrays)"><span class="num">LESSON 03</span><h3>One-Dimensional Arrays</h3><p>Store many values under one name, walk through them with loops, find sums and maximums.</p><div class="prog" data-prog="arrays"></div></a>
+    <a class="tcard" href="#arrays2d" style="--c:var(--arrays2d)"><span class="num">LESSON 04</span><h3>Two-Dimensional Arrays</h3><p>Tables of rows and columns, nested for loops and nested for-each loops.</p><div class="prog" data-prog="arrays2d"></div></a>
+  </div>
+  <h3>What's inside every lesson</h3>
+  <div class="legend">
+    <div><span class="ic">🎯</span><span><b>Objectives</b>What you should be able to do by the end.</span></div>
+    <div><span class="ic">💬</span><span><b>Discussion &amp; examples</b>Short explanations with code you can run and copy.</span></div>
+    <div><span class="ic">🧪</span><span><b>Try-it lab</b>Change values and watch what the code does.</span></div>
+    <div><span class="ic">🔍</span><span><b>Code tracer</b>Step through a program line by line and watch the variables change.</span></div>
+  </div>
+</section>
+
+<!-- ======================= LOOPS ======================= -->
+<section id="loops" class="topic" data-topic="loops" style="--accent:var(--loops)">
+  <div class="topic-hero">
+    <div class="num">LESSON 01</div>
+    <h1>Looping Statements in Java</h1>
+    <p>A loop runs a block of code again and again while a condition is true. Loops save time, reduce errors and keep code readable.</p>
+  </div>
+  <div class="layout">
+    <nav class="toc"></nav>
+    <div class="content">
+
+      <section class="block" id="loops-obj" data-label="Objectives">
+        <h2><span class="tag">01</span>Objectives</h2>
+        <p class="sub">By the end of this lesson, you should be able to:</p>
+        <ol class="objectives">
+          <li data-n="1">Identify the looping statements used in Java.</li>
+          <li data-n="2">Discuss how each looping statement works.</li>
+          <li data-n="3">Demonstrate how looping statements work by tracing code.</li>
+          <li data-n="4">Apply looping statements in creating programs.</li>
+        </ol>
+      </section>
+
+      <section class="block" id="loops-disc" data-label="Discussion">
+        <h2><span class="tag">02</span>Discussion &amp; Examples</h2>
+
+        <h3 style="margin-top:0">What is a looping statement?</h3>
+        <p>A <b>loop</b> is a sequence of statements executed repeatedly, zero or more times, as long as a given condition is satisfied. Imagine printing the numbers 1 to 1,000. Without a loop that is 1,000 <code>println</code> statements. With a loop it is three lines.</p>
+        <div class="callout"><b>Every loop has 3 ingredients.</b> A starting value (<i>initialization</i>), a <i>condition</i> that decides whether to keep going, and an <i>update</i> that moves the loop toward stopping. Forget the update and you get an <b>infinite loop</b>.</div>
+
+        <p>Java has three loops. Tap each card:</p>
+        <div class="flip-row">
+          <div class="flip"><div class="in"><div class="f"><b>while</b><small>Tap to flip</small></div><div class="b"><span>Checks the condition <b>first</b>. May run <b>zero</b> times.</span></div></div></div>
+          <div class="flip"><div class="in"><div class="f"><b>do / while</b><small>Tap to flip</small></div><div class="b"><span>Runs the body <b>first</b>, then checks. Always runs <b>at least once</b>.</span></div></div></div>
+          <div class="flip"><div class="in"><div class="f"><b>for</b><small>Tap to flip</small></div><div class="b"><span>Best when you know <b>exactly how many times</b> to repeat.</span></div></div></div>
+        </div>
+
+        <h3>1. The while loop</h3>
+        <p>The <code>while</code> loop goes through a block of code as long as a specified condition is <b>true</b>.</p>
+        <div class="codeblock" data-title="Syntax"><script type="text/x-java">while (condition) {
+    // code block to be executed
+}</script></div>
+        <p>In this example, the code inside the loop runs over and over as long as <code>i</code> is less than 5:</p>
+        <div class="example" data-title="WhileDemo.java"><script type="text/x-java">int i = 0;
+while (i < 5) {
+    System.out.println(i);
+    i++;
+}</script><script type="text/x-output">0
+1
+2
+3
+4</script></div>
+        <div class="callout warn"><b>Watch out:</b> if you remove <code>i++</code>, <code>i</code> stays 0 forever, the condition is always true, and the program never ends.</div>
+
+        <h3>2. The do/while loop</h3>
+        <p>The <code>do/while</code> loop is a variant of the while loop. It executes the code block <b>once</b> before checking the condition, then repeats as long as the condition is true.</p>
+        <div class="codeblock" data-title="Syntax"><script type="text/x-java">do {
+    // code block to be executed
+} while (condition);</script></div>
+        <div class="example" data-title="DoWhileDemo.java"><script type="text/x-java">int i = 0;
+do {
+    System.out.println(i);
+    i++;
+} while (i < 5);</script><script type="text/x-output">0
+1
+2
+3
+4</script></div>
+        <p><b>Example 2:</b> display the even numbers from 1 to 10 using do/while.</p>
+        <div class="example" data-title="EvenDoWhile.java"><script type="text/x-java">int i = 2;
+do {
+    System.out.println(i);
+    i = i + 2;
+} while (i <= 10);</script><script type="text/x-output">2
+4
+6
+8
+10</script></div>
+        <div class="quick" data-q="loops1"></div>
+
+        <h3>3. The for loop</h3>
+        <p>When you know <b>exactly how many times</b> you want to loop, use a <code>for</code> loop. All three ingredients sit together in one line.</p>
+        <div class="codeblock" data-title="Syntax"><script type="text/x-java">for (statement 1; statement 2; statement 3) {
+    // code block to be executed
+}</script></div>
+        <table class="simple">
+          <tr><th>Part</th><th>Example</th><th>When it runs</th></tr>
+          <tr><td>Statement 1 (initialization)</td><td><code>int i = 0</code></td><td><b>Once</b>, before the loop starts</td></tr>
+          <tr><td>Statement 2 (condition)</td><td><code>i &lt; 5</code></td><td>Before <b>every</b> iteration. If false, the loop ends</td></tr>
+          <tr><td>Statement 3 (update)</td><td><code>i++</code></td><td>After <b>every</b> iteration of the body</td></tr>
+        </table>
+        <div class="example" data-title="ForDemo.java"><script type="text/x-java">for (int i = 0; i < 5; i++) {
+    System.out.println(i);
+}</script><script type="text/x-output">0
+1
+2
+3
+4</script></div>
+        <p>This one prints only the even values between 0 and 10, because statement 3 adds 2 each time:</p>
+        <div class="example" data-title="ForEven.java"><script type="text/x-java">for (int i = 0; i <= 10; i = i + 2) {
+    System.out.println(i);
+}</script><script type="text/x-output">0
+2
+4
+6
+8
+10</script></div>
+
+        <h3>4. break and continue</h3>
+        <div class="grid2">
+          <div class="callout"><b>break</b> jumps <b>out of the loop</b> completely. You have seen it in <code>switch</code>; it works in loops too.</div>
+          <div class="callout"><b>continue</b> skips the <b>rest of the current iteration</b> and moves on to the next one.</div>
+        </div>
+        <div class="grid2">
+          <div class="example" data-title="Break.java — stop at 4"><script type="text/x-java">for (int i = 0; i < 10; i++) {
+    if (i == 4) {
+        break;
+    }
+    System.out.println(i);
+}</script><script type="text/x-output">0
+1
+2
+3</script></div>
+          <div class="example" data-title="Continue.java — skip 4"><script type="text/x-java">for (int i = 0; i < 10; i++) {
+    if (i == 4) {
+        continue;
+    }
+    System.out.println(i);
+}</script><script type="text/x-output">0
+1
+2
+3
+5
+6
+7
+8
+9</script></div>
+        </div>
+        <p>break and continue also work in <code>while</code> loops. In a while loop with <code>continue</code>, remember to update the counter <b>before</b> <code>continue</code>, or the loop gets stuck.</p>
+        <div class="grid2">
+          <div class="example" data-title="WhileBreak.java"><script type="text/x-java">int i = 0;
+while (i < 10) {
+    System.out.println(i);
+    i++;
+    if (i == 4) {
+        break;
+    }
+}</script><script type="text/x-output">0
+1
+2
+3</script></div>
+          <div class="example" data-title="WhileContinue.java"><script type="text/x-java">int i = 0;
+while (i < 10) {
+    if (i == 4) {
+        i++;
+        continue;
+    }
+    System.out.println(i);
+    i++;
+}</script><script type="text/x-output">0
+1
+2
+3
+5
+6
+7
+8
+9</script></div>
+        </div>
+
+        <h3>Which loop should I use?</h3>
+        <table class="simple">
+          <tr><th>Situation</th><th>Best loop</th></tr>
+          <tr><td>You know the number of repetitions (print 1–100, process 10 scores)</td><td><code>for</code></td></tr>
+          <tr><td>You repeat until something happens, and it may not need to run at all (read until the user types 0)</td><td><code>while</code></td></tr>
+          <tr><td>The body must run at least once (show a menu, then ask "Again? y/n")</td><td><code>do/while</code></td></tr>
+        </table>
+        <div class="quick" data-q="loops2"></div>
+      </section>
+
+      <section class="block" id="loops-lab" data-label="Try-it Lab">
+        <h2><span class="tag">03</span>Try-it Lab: Loop Builder</h2>
+        <p class="sub">Change the parts of the loop and see the code and output update instantly. Can you make an infinite loop on purpose?</p>
+        <div class="lab" id="loopLab">
+          <div class="lab-controls">
+            <label>Loop type<select id="lab-type"><option value="for">for</option><option value="while">while</option><option value="do">do-while</option></select></label>
+            <label>Start (i =)<input type="number" id="lab-start" value="1"></label>
+            <label>Condition<select id="lab-op"><option>&lt;</option><option selected>&lt;=</option><option>&gt;</option><option>&gt;=</option><option>!=</option></select></label>
+            <label>Limit<input type="number" id="lab-limit" value="10"></label>
+            <label>Update<select id="lab-upd"><option value="i++">i++</option><option value="i--">i--</option><option value="i += 2">i += 2</option><option value="i -= 2">i -= 2</option><option value="i += 3">i += 3</option><option value="i *= 2">i *= 2</option></select></label>
+          </div>
+          <div class="codeblock" id="lab-code" data-title="LoopLab.java"></div>
+          <span class="lbl">Output</span>
+          <div class="chips" id="lab-out"></div>
+          <div class="alert" id="lab-alert"></div>
+          <div class="lab-stat"><span>Body executed: <b id="lab-n">0</b> time(s)</span><span>Value of i after the loop: <b id="lab-final">-</b></span></div>
+          <div class="btn-row">
+            <button class="btn" data-preset="1,<=,10,i++,for">1 to 10</button>
+            <button class="btn" data-preset="10,>=,1,i--,for">Countdown</button>
+            <button class="btn" data-preset="5,<,5,i++,while">while that never runs</button>
+            <button class="btn" data-preset="5,<,5,i++,do">do-while that runs once</button>
+            <button class="btn" data-preset="1,!=,10,i += 2,for">Infinite loop 😱</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="block" id="loops-trace" data-label="Code Tracer">
+        <h2><span class="tag">04</span>Code Tracer</h2>
+        <p class="sub">Type your predicted output, then press <b>Step ▶</b> to run one line at a time. The highlighted line is the one about to run.</p>
+        <div class="seg" data-tracers="loops">
+          <button class="on" data-t="loop-while">while</button><button data-t="loop-dowhile">do-while</button><button data-t="loop-break">for + break</button><button data-t="loop-continue">while + continue</button>
+        </div>
+        <div class="tracer-slot"></div>
+      </section>
+
+      <div class="pager"><a href="#home"><small>← Back</small>Home</a><a class="next" href="#methods"><small>Next lesson →</small>Methods in Java</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= METHODS ======================= -->
+<section id="methods" class="topic" data-topic="methods" style="--accent:var(--methods)">
+  <div class="topic-hero">
+    <div class="num">LESSON 02</div>
+    <h1>Methods in Java</h1>
+    <p>A method is a named block of code that runs only when it is called. Write it once, then call it as many times as you need.</p>
+  </div>
+  <div class="layout">
+    <nav class="toc"></nav>
+    <div class="content">
+
+      <section class="block" id="methods-obj" data-label="Objectives">
+        <h2><span class="tag">01</span>Objectives</h2>
+        <p class="sub">By the end of this lesson, you should be able to:</p>
+        <ol class="objectives">
+          <li data-n="1">Define method, parameters and arguments.</li>
+          <li data-n="2">Discuss how methods are used in writing programs in Java.</li>
+          <li data-n="3">Write a Java program implementing methods.</li>
+          <li data-n="4">Compare programs written in Java with and without methods.</li>
+        </ol>
+      </section>
+
+      <section class="block" id="methods-disc" data-label="Discussion">
+        <h2><span class="tag">02</span>Discussion &amp; Examples</h2>
+        <h3 style="margin-top:0">Opening problem</h3>
+        <p>Find the sum of the integers from 1 to 10, from 20 to 30, and from 35 to 45. Compare the two solutions:</p>
+        <div class="seg" id="wwSeg"><button class="on" data-v="without">Without a method</button><button data-v="with">With a method</button></div>
+        <div id="ww-without" class="example" data-title="NoMethod.java — the same logic written 3 times"><script type="text/x-java">int sum = 0;
+for (int i = 1; i <= 10; i++)
+    sum += i;
+System.out.println("Sum from 1 to 10 is " + sum);
+
+sum = 0;
+for (int i = 20; i <= 30; i++)
+    sum += i;
+System.out.println("Sum from 20 to 30 is " + sum);
+
+sum = 0;
+for (int i = 35; i <= 45; i++)
+    sum += i;
+System.out.println("Sum from 35 to 45 is " + sum);</script><script type="text/x-output">Sum from 1 to 10 is 55
+Sum from 20 to 30 is 275
+Sum from 35 to 45 is 440</script></div>
+        <div id="ww-with" class="example" data-title="WithMethod.java — write once, call 3 times" style="display:none"><script type="text/x-java">public static int sum(int i1, int i2) {
+    int sum = 0;
+    for (int i = i1; i <= i2; i++)
+        sum += i;
+    return sum;
+}
+
+public static void main(String[] args) {
+    System.out.println("Sum from 1 to 10 is " + sum(1, 10));
+    System.out.println("Sum from 20 to 30 is " + sum(20, 30));
+    System.out.println("Sum from 35 to 45 is " + sum(35, 45));
+}</script><script type="text/x-output">Sum from 1 to 10 is 55
+Sum from 20 to 30 is 275
+Sum from 35 to 45 is 440</script></div>
+        <div class="callout"><b>Same output, better code.</b> If the summing logic has a bug, the version without a method needs three fixes. The method version needs one.</div>
+
+        <h3>What is a method?</h3>
+        <ul>
+          <li>A method is a <b>block of code that only runs when it is called</b>.</li>
+          <li>It is a collection of statements grouped together to perform an operation.</li>
+          <li>You can pass data, called <b>parameters</b>, into a method.</li>
+          <li>Methods are also known as <b>functions</b>.</li>
+          <li><b>Why use methods?</b> To reuse code: define it once, use it many times.</li>
+        </ul>
+
+        <h3>Anatomy of a method</h3>
+        <p>Click each part of the method header to see what it means.</p>
+        <div class="anat" id="anat"><button data-a="public">public</button> <button data-a="static">static</button> <button data-a="type">int</button> <button data-a="name">sum</button>(<button data-a="params">int a, int b</button>) <button data-a="body">{ return a + b; }</button></div>
+        <div class="anat-exp" id="anatExp">👆 Click a highlighted part above.</div>
+
+        <h3>Creating and calling a method</h3>
+        <p>A method must be declared <b>inside a class</b>. Java already gives us methods like <code>System.out.println()</code>, but we can create our own. To call a method, write its name followed by parentheses and a semicolon. A method can be called many times.</p>
+        <div class="example" data-title="Main.java"><script type="text/x-java">public class Main {
+    static void myMethod() {
+        System.out.println("I just got executed!");
+    }
+
+    public static void main(String[] args) {
+        myMethod();
+        myMethod();
+        myMethod();
+    }
+}</script><script type="text/x-output">I just got executed!
+I just got executed!
+I just got executed!</script></div>
+        <table class="simple">
+          <tr><td><code>myMethod</code></td><td>the name of the method</td></tr>
+          <tr><td><code>static</code></td><td>the method belongs to the <code>Main</code> class, not to an object of the class</td></tr>
+          <tr><td><code>void</code></td><td>the method does not return a value</td></tr>
+        </table>
+
+        <h3>Parameters and arguments</h3>
+        <p>Information can be passed to methods as <b>parameters</b>. Parameters act as variables inside the method. They go inside the parentheses after the method name; separate several parameters with commas.</p>
+        <div class="example" data-title="Params.java"><script type="text/x-java">static void myMethod(String fname) {
+    System.out.println(fname + " Dela Cruz");
+}
+
+public static void main(String[] args) {
+    myMethod("Angela");
+    myMethod("Mark");
+    myMethod("Cristelle");
+}</script><script type="text/x-output">Angela Dela Cruz
+Mark Dela Cruz
+Cristelle Dela Cruz</script></div>
+        <div class="grid2">
+          <div class="callout"><b>Parameter</b>: the variable in the method <i>definition</i>. Here: <code>fname</code>.</div>
+          <div class="callout"><b>Argument</b>: the actual value <i>passed</i> when calling. Here: <code>"Angela"</code>, <code>"Mark"</code>, <code>"Cristelle"</code>.</div>
+        </div>
+        <p><b>Multiple parameters.</b> You can have as many as you like. The arguments must be in the same order and of matching types.</p>
+        <div class="example" data-title="MultiParams.java"><script type="text/x-java">static void myMethod(String fname, int age) {
+    System.out.println(fname + " is " + age);
+}
+
+public static void main(String[] args) {
+    myMethod("Angela", 19);
+    myMethod("Mark", 20);
+    myMethod("Cristelle", 18);
+}</script><script type="text/x-output">Angela is 19
+Mark is 20
+Cristelle is 18</script></div>
+        <div class="quick" data-q="methods1"></div>
+
+        <h3>Return values</h3>
+        <p><code>void</code> means the method returns nothing. To send a value back, replace <code>void</code> with a data type (<code>int</code>, <code>double</code>, <code>String</code>…) and use the <code>return</code> keyword.</p>
+        <div class="grid2">
+          <div class="example" data-title="Return.java"><script type="text/x-java">static int myMethod(int x, int y) {
+    return x + y;
+}
+
+public static void main(String[] args) {
+    System.out.println(myMethod(5, 3));
+}</script><script type="text/x-output">8</script></div>
+          <div class="example" data-title="StoreResult.java"><script type="text/x-java">static int myMethod(int x, int y) {
+    return x + y;
+}
+
+public static void main(String[] args) {
+    int z = myMethod(5, 3);  // store it
+    System.out.println(z);
+}</script><script type="text/x-output">8</script></div>
+        </div>
+        <p>Storing the result in a variable is recommended, because it is easier to read and maintain.</p>
+
+        <h3>A method with if...else</h3>
+        <div class="example" data-title="CheckAge.java"><script type="text/x-java">static void checkAge(int age) {
+    if (age < 18) {
+        System.out.println("Access denied - You are not old enough!");
+    } else {
+        System.out.println("Access granted - You are old enough!");
+    }
+}
+
+public static void main(String[] args) {
+    checkAge(20);
+    checkAge(15);
+}</script><script type="text/x-output">Access granted - You are old enough!
+Access denied - You are not old enough!</script></div>
+
+        <h3>Method overloading</h3>
+        <p>With <b>method overloading</b>, multiple methods can have the <b>same name</b> with <b>different parameters</b> (different number or types). Java picks the right version based on the arguments.</p>
+        <div class="grid2">
+          <div class="example" data-title="Without overloading"><script type="text/x-java">static int plusMethodInt(int x, int y) {
+    return x + y;
+}
+static double plusMethodDouble(double x, double y) {
+    return x + y;
+}
+public static void main(String[] args) {
+    int n1 = plusMethodInt(8, 5);
+    double n2 = plusMethodDouble(4.5, 6.25);
+    System.out.println("int: " + n1);
+    System.out.println("double: " + n2);
+}</script><script type="text/x-output">int: 13
+double: 10.75</script></div>
+          <div class="example" data-title="With overloading"><script type="text/x-java">static int plusMethod(int x, int y) {
+    return x + y;
+}
+static double plusMethod(double x, double y) {
+    return x + y;
+}
+public static void main(String[] args) {
+    int n1 = plusMethod(8, 5);
+    double n2 = plusMethod(4.5, 6.25);
+    System.out.println("int: " + n1);
+    System.out.println("double: " + n2);
+}</script><script type="text/x-output">int: 13
+double: 10.75</script></div>
+        </div>
+        <div class="callout warn"><b>Not overloading:</b> two methods that differ <b>only in return type</b>, like <code>int f(int x)</code> and <code>double f(int x)</code>. That is a compile error.</div>
+
+        <h3>Scope</h3>
+        <p>In Java, a variable is only accessible inside the region where it is created. This is called <b>scope</b>.</p>
+        <div class="grid2">
+          <div class="example" data-title="Method scope"><script type="text/x-java">public static void main(String[] args) {
+    // x cannot be used here yet
+    int x = 100;
+    // x can be used from here on
+    System.out.println(x);
+}</script><script type="text/x-output">100</script></div>
+          <div class="example" data-title="Block scope"><script type="text/x-java">public static void main(String[] args) {
+    // x cannot be used here
+    {
+        int x = 100;
+        System.out.println(x);  // OK
+    }
+    // x cannot be used here either
+}</script><script type="text/x-output">100</script></div>
+        </div>
+        <p>A block can be on its own or belong to an <code>if</code>, <code>while</code> or <code>for</code>. A variable declared in a <code>for</code> header (like <code>int i</code>) exists only inside that loop.</p>
+        <div class="quick" data-q="methods2"></div>
+
+        <h3>Putting it together: methods with user input</h3>
+        <div class="example" data-title="Calculator.java"><script type="text/x-java">import java.util.Scanner;
+
+public class Calculator {
+    static int add(int a, int b) {
+        return a + b;
+    }
+
+    static int subtract(int a, int b) {
+        return a - b;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter first number: ");
+        int x = sc.nextInt();
+        System.out.print("Enter second number: ");
+        int y = sc.nextInt();
+        System.out.println("Sum: " + add(x, y));
+        System.out.println("Difference: " + subtract(x, y));
+    }
+}</script><script type="text/x-output">Enter first number: 12
+Enter second number: 5
+Sum: 17
+Difference: 7</script></div>
+      </section>
+
+      <section class="block" id="methods-trace" data-label="Code Tracer">
+        <h2><span class="tag">03</span>Code Tracer</h2>
+        <p class="sub">Watch the <b>call stack</b>: when a method is called, Java jumps into it, runs it, and then returns to where it left off.</p>
+        <div class="seg" data-tracers="methods">
+          <button class="on" data-t="method-sum">Calling sum()</button><button data-t="method-overload">void, return &amp; overloading</button>
+        </div>
+        <div class="tracer-slot"></div>
+      </section>
+
+      <div class="pager"><a href="#loops"><small>← Previous</small>Looping Statements</a><a class="next" href="#arrays"><small>Next lesson →</small>One-Dimensional Arrays</a></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap">References: lesson slides on Looping Statements, Methods, Arrays and 2D Arrays; W3Schools Java Tutorial (w3schools.com/java). Your progress is saved in this browser only.</div></footer>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   DATA: tracers, quizzes, paper activities, IDE activities
+   ========================================================= */
+const J = String.raw;
+const fmtD = x => Number.isInteger(x) ? x.toFixed(1) : String(+x.toFixed(10));
+
+const TRACES = {
+/* ---------------- LOOPS ---------------- */
+'loop-while': { title:'while loop: print 0 to 4', code:J`
+int i = 0;
+while (i < 5) {
+    System.out.println(i);
+    i++;
+}
+System.out.println("Done!");`,
+ *gen(io){
+   let i=0; yield [1,{i},'Create variable <b>i</b> and set it to 0.'];
+   while(true){
+     const ok=i<5;
+     yield [2,{i},`Check the condition: <code>${i} &lt; 5</code> is <b>${ok}</b>. ${ok?'Run the loop body.':'Skip the body and exit the loop.'}`];
+     if(!ok)break;
+     io.println(i); yield [3,{i},`Print the value of i: <b>${i}</b>.`];
+     i++; yield [4,{i},`<code>i++</code> adds 1. i is now <b>${i}</b>. Go back up to the condition.`];
+   }
+   io.println('Done!'); yield [6,{i},'After the loop, print "Done!". The body ran 5 times; i stopped at 5 because 5 &lt; 5 is false.'];
+ }},
+'loop-dowhile': { title:'do-while: the body runs before the check', code:J`
+int i = 10;
+do {
+    System.out.println(i);
+    i++;
+} while (i < 5);
+System.out.println("Done!");`,
+ *gen(io){
+   let i=10; yield [1,{i},'i starts at 10. Notice that 10 &lt; 5 is already false…'];
+   while(true){
+     yield [2,{i},'Enter the <b>do</b> block. No condition is checked before the first run!'];
+     io.println(i); yield [3,{i},`Print <b>${i}</b>.`];
+     i++; yield [4,{i},`i++ → i is now <b>${i}</b>.`];
+     const ok=i<5; yield [5,{i},`Now check: <code>${i} &lt; 5</code> is <b>${ok}</b>. ${ok?'Repeat.':'Stop looping.'}`];
+     if(!ok)break;
+   }
+   io.println('Done!'); yield [6,{i},'The body ran <b>once</b> even though the condition was false from the start. A while loop here would print nothing but "Done!".'];
+ }},
+'loop-break': { title:'for loop with break', code:J`
+for (int i = 0; i < 10; i++) {
+    if (i == 4) {
+        break;
+    }
+    System.out.println(i);
+}
+System.out.println("Done!");`,
+ *gen(io){
+   let i=0; yield [1,{i},'Statement 1 runs <b>once</b>: <code>int i = 0</code>.'];
+   while(true){
+     const ok=i<10; yield [1,{i},`Statement 2 (condition): <code>${i} &lt; 10</code> is <b>${ok}</b>.`];
+     if(!ok)break;
+     yield [2,{i},`Is <code>${i} == 4</code>? <b>${i==4}</b>.`];
+     if(i==4){ yield [3,{i},'<b>break!</b> Jump out of the loop right now. The remaining iterations never happen.']; break; }
+     io.println(i); yield [5,{i},`Print <b>${i}</b>.`];
+     i++; yield [1,{i},`Statement 3 (update): <code>i++</code> → i is now <b>${i}</b>.`];
+   }
+   io.println('Done!'); yield [7,{},'Print "Done!". (i no longer exists here because it was declared inside the for header.)'];
+ }},
+'loop-continue': { title:'while loop with continue (skips 4)', code:J`
+int i = 0;
+while (i < 7) {
+    if (i == 4) {
+        i++;
+        continue;
+    }
+    System.out.println(i);
+    i++;
+}`,
+ *gen(io){
+   let i=0; yield [1,{i},'i starts at 0.'];
+   while(true){
+     const ok=i<7; yield [2,{i},`Check <code>${i} &lt; 7</code>: <b>${ok}</b>.`];
+     if(!ok)break;
+     yield [3,{i},`Is <code>${i} == 4</code>? <b>${i==4}</b>.`];
+     if(i==4){ i++; yield [4,{i},`Increase i to <b>${i}</b> <i>before</i> continuing. Without this line the loop would be stuck at 4 forever!`]; yield [5,{i},'<b>continue</b>: skip the rest of the body and go back to the condition. 4 is never printed.']; continue; }
+     io.println(i); yield [7,{i},`Print <b>${i}</b>.`];
+     i++; yield [8,{i},`i++ → <b>${i}</b>.`];
+   }
+   yield [9,{i},'Loop ended. Output skipped 4.'];
+ }},
+
+/* ---------------- METHODS ---------------- */
+'method-sum': { title:'Calling a method that returns a value', code:J`
+public class Main {
+    static int sum(int a, int b) {
+        int total = 0;
+        for (int i = a; i <= b; i++) {
+            total += i;
+        }
+        return total;
+    }
+
+    public static void main(String[] args) {
+        int x = sum(1, 3);
+        System.out.println("Sum 1-3: " + x);
+        System.out.println("Sum 4-5: " + sum(4, 5));
+    }
+}`,
+ *gen(io){
+   function* sumGen(a,b){
+     const st=`main() ▸ sum(${a}, ${b})`;
+     yield [2,{'call stack':st,a,b},`Jump into <b>sum</b>. The arguments are copied into the parameters: a = ${a}, b = ${b}.`];
+     let total=0; yield [3,{'call stack':st,a,b,total},'Create local variable total = 0.'];
+     let i=a;
+     while(true){
+       const ok=i<=b; yield [4,{'call stack':st,a,b,total,i},`Check <code>${i} &lt;= ${b}</code>: <b>${ok}</b>.`];
+       if(!ok)break;
+       total+=i; yield [5,{'call stack':st,a,b,total,i},`total += ${i} → total is <b>${total}</b>.`];
+       i++;
+     }
+     yield [7,{'call stack':st,a,b,total},`<b>return ${total}</b>. sum() ends, its variables disappear, and ${total} goes back to the caller.`];
+     return total;
+   }
+   yield [10,{'call stack':'main()'},'The program always starts in <b>main</b>.'];
+   yield [11,{'call stack':'main()'},'Calling <code>sum(1, 3)</code>. main pauses here and waits for the answer.'];
+   const x = yield* sumGen(1,3);
+   yield [11,{'call stack':'main()',x},`Back in main. The returned value is stored: x = <b>${x}</b>.`];
+   io.println('Sum 1-3: '+x); yield [12,{'call stack':'main()',x},'Print the result.'];
+   yield [13,{'call stack':'main()',x},'This println calls <code>sum(4, 5)</code> first. The method is reused!'];
+   const y = yield* sumGen(4,5);
+   io.println('Sum 4-5: '+y); yield [13,{'call stack':'main()',x},`Back in main: the returned ${y} is printed directly without storing it.`];
+   yield [14,{},'main() ends. Program finished.'];
+ }},
+'method-overload': { title:'void method, return values and overloading', code:J`
+static void greet(String name) {
+    System.out.println("Hi, " + name + "!");
+}
+static int square(int n) {
+    return n * n;
+}
+static double square(double n) {
+    return n * n;
+}
+public static void main(String[] args) {
+    greet("Angela");
+    int s = square(4);
+    double d = square(2.5);
+    System.out.println(s + " " + d);
+}`,
+ *gen(io){
+   yield [10,{'call stack':'main()'},'Start in main.'];
+   yield [11,{'call stack':'main()'},'Call greet with the argument "Angela".'];
+   yield [1,{'call stack':'main() ▸ greet("Angela")',name:'"Angela"'},'Inside greet, the parameter <b>name</b> holds "Angela".'];
+   io.println('Hi, Angela!'); yield [2,{'call stack':'main() ▸ greet("Angela")',name:'"Angela"'},'Print the greeting. greet is <b>void</b>, so nothing is returned; we just go back.'];
+   yield [12,{'call stack':'main()'},'<code>square(4)</code>: 4 is an <b>int</b>, so Java picks <code>square(int n)</code>.'];
+   yield [4,{'call stack':'main() ▸ square(int 4)',n:4},'Inside the int version: n = 4.'];
+   yield [5,{'call stack':'main() ▸ square(int 4)',n:4},'return 4 * 4 = <b>16</b>.'];
+   yield [12,{'call stack':'main()',s:16},'s = 16.'];
+   yield [13,{'call stack':'main()',s:16},'<code>square(2.5)</code>: 2.5 is a <b>double</b>, so Java picks the overloaded <code>square(double n)</code>.'];
+   yield [7,{'call stack':'main() ▸ square(double 2.5)',n:2.5},'Inside the double version: n = 2.5.'];
+   yield [8,{'call stack':'main() ▸ square(double 2.5)',n:2.5},'return 2.5 * 2.5 = <b>6.25</b>.'];
+   yield [13,{'call stack':'main()',s:16,d:6.25},'d = 6.25.'];
+   io.println('16 6.25'); yield [14,{'call stack':'main()',s:16,d:6.25},'Print s and d. Same method name, two different versions: that is <b>overloading</b>.'];
+ }},
+
+/* ---------------- 1D ARRAYS ---------------- */
+'arr-add10': { title:'Add 10 to every element, then print', code:J`
+int[] no = {1, 2, 3, 4, 5};
+for (int i = 0; i < 5; i++)
+    no[i] += 10;
+for (int i = 0; i < 5; i++)
+    System.out.print(no[i] + " ");`,
+ *gen(io){
+   const no=[1,2,3,4,5]; yield [1,{no},'Create an array of 5 ints. Indexes go from 0 to 4.'];
+   let i=0; yield [2,{no,i},'First loop: i = 0.'];
+   while(true){
+     const ok=i<5; yield [2,{no,i},`Check <code>${i} &lt; 5</code>: <b>${ok}</b>.`, ok?{arr:'no',i}:null];
+     if(!ok)break;
+     const old=no[i]; no[i]+=10; yield [3,{no,i},`no[${i}] += 10 → ${old} + 10 = <b>${no[i]}</b>.`,{arr:'no',i}];
+     i++;
+   }
+   i=0; yield [4,{no,i},'Second loop: start again at i = 0 to print.'];
+   while(true){
+     const ok=i<5; yield [4,{no,i},`Check <code>${i} &lt; 5</code>: <b>${ok}</b>.`, ok?{arr:'no',i}:null];
+     if(!ok)break;
+     io.print(no[i]+' '); yield [5,{no,i},`Print no[${i}] = <b>${no[i]}</b> followed by a space.`,{arr:'no',i}];
+     i++;
+   }
+   yield [5,{no},'Done. Every element is 10 bigger.'];
+ }},
+'arr-max': { title:'Find the largest element', code:J`
+int[] scores = {72, 95, 88, 99, 91};
+int max = scores[0];
+for (int i = 1; i < scores.length; i++) {
+    if (scores[i] > max) {
+        max = scores[i];
+    }
+}
+System.out.println("Max is " + max);`,
+ *gen(io){
+   const scores=[72,95,88,99,91]; yield [1,{scores},'scores.length is 5.'];
+   let max=scores[0]; yield [2,{scores,max},'Assume the first element is the largest so far: max = 72.',{arr:'scores',i:0}];
+   let i=1;
+   while(true){
+     const ok=i<scores.length; yield [3,{scores,max,i},`Check <code>${i} &lt; 5</code>: <b>${ok}</b>.${i===1?' (We start at 1 because index 0 is already in max.)':''}`, ok?{arr:'scores',i}:null];
+     if(!ok)break;
+     const gt=scores[i]>max; yield [4,{scores,max,i},`Is scores[${i}] (${scores[i]}) &gt; max (${max})? <b>${gt}</b>.`,{arr:'scores',i}];
+     if(gt){ max=scores[i]; yield [5,{scores,max,i},`New largest found: max = <b>${max}</b>.`,{arr:'scores',i}]; }
+     i++;
+   }
+   io.println('Max is '+max); yield [8,{scores,max},`Print the result: ${max}.`];
+ }},
+
+/* ---------------- 2D ARRAYS ---------------- */
+'g-sum': { title:'Sum all elements with a nested for loop', code:J`
+int[][] m = { {1, 2, 3}, {4, 5, 6} };
+int sum = 0;
+for (int r = 0; r < m.length; r++) {
+    for (int c = 0; c < m[r].length; c++) {
+        sum += m[r][c];
+    }
+}
+System.out.println("Sum = " + sum);`,
+ *gen(io){
+   const m=[[1,2,3],[4,5,6]]; yield [1,{m},'m has 2 rows and 3 columns. m.length = 2, m[0].length = 3.'];
+   let sum=0; yield [2,{m,sum},'sum = 0.'];
+   let r=0;
+   while(true){
+     const ok=r<m.length; yield [3,{m,sum,r},`Outer loop: <code>${r} &lt; 2</code> is <b>${ok}</b>.${ok?` Work on row ${r}.`:''}`, ok?{arr:'m',r}:null];
+     if(!ok)break;
+     let c=0;
+     while(true){
+       const ok2=c<m[r].length; yield [4,{m,sum,r,c},`Inner loop: <code>${c} &lt; 3</code> is <b>${ok2}</b>.${ok2?'':' Inner loop done; back to the outer loop.'}`, ok2?{arr:'m',r,c}:{arr:'m',r}];
+       if(!ok2)break;
+       sum+=m[r][c]; yield [5,{m,sum,r,c},`sum += m[${r}][${c}] (${m[r][c]}) → sum = <b>${sum}</b>.`,{arr:'m',r,c}];
+       c++;
+     }
+     r++;
+   }
+   io.println('Sum = '+sum); yield [8,{m,sum},'All 6 cells visited (2 rows × 3 columns). Print the sum.'];
+ }},
+'g-foreach': { title:'Print a seat plan with nested for-each', code:J`
+String[][] seats = { {"Ana", "Ben"}, {"Cris", "Dan"}, {"Eli", "Fe"} };
+for (String[] row : seats) {
+    for (String name : row) {
+        System.out.print(name + " ");
+    }
+    System.out.println();
+}`,
+ *gen(io){
+   const seats=[['Ana','Ben'],['Cris','Dan'],['Eli','Fe']]; yield [1,{seats},'3 rows, 2 seats per row.'];
+   for(let r=0;r<seats.length;r++){
+     const row=seats[r];
+     yield [2,{seats,row},`Outer for-each: <b>row</b> now holds the whole array seats[${r}].`,{arr:'seats',r}];
+     for(let c=0;c<row.length;c++){
+       const name=row[c];
+       yield [3,{seats,row,name:'"'+name+'"'},`Inner for-each: <b>name</b> = "${name}".`,{arr:'seats',r,c}];
+       io.print(name+' '); yield [4,{seats,row,name:'"'+name+'"'},`Print "${name} ".`,{arr:'seats',r,c}];
+     }
+     io.println(); yield [6,{seats,row},'Row finished: print a new line.',{arr:'seats',r}];
+   }
+   yield [7,{seats},'No more rows. Done. No index variables were needed.'];
+ }}
+};
+
+/* ---------------- quick checks inside discussions ---------------- */
+const QUICK = {
+ loops1:{q:'What does this print?',code:J`
+int i = 7;
+do {
+    System.out.print(i + " ");
+    i++;
+} while (i < 5);`,o:['Nothing','7','7 8 9 10 …','5 6'],a:1,e:'A do-while always runs its body once before checking. It prints 7, then 8 &lt; 5 is false, so it stops.'},
+ loops2:{q:'A program shows a menu, does the chosen task, then asks "Do another? (y/n)". Which loop fits best?',o:['for','while','do/while'],a:2,e:'The menu must appear at least once, so do/while is the natural fit.'},
+ methods1:{q:'In <code>myMethod("Mark", 20)</code>, what are <code>"Mark"</code> and <code>20</code>?',o:['Parameters','Arguments','Return values','Data types'],a:1,e:'Values passed in a call are <b>arguments</b>. The variables that receive them (fname, age) are <b>parameters</b>.'},
+ methods2:{q:'Which pair is a valid overload?',o:['<code>int f(int x)</code> and <code>double f(int x)</code>','<code>int f(int x)</code> and <code>int f(int y)</code>','<code>int f(int x)</code> and <code>int f(int x, int y)</code>'],a:2,e:'Overloads must differ in the parameter list (number or types). Changing only the return type or the parameter name is not enough.'},
+ arrays1:{q:'<code>int[] a = {4, 8, 15, 16, 23};</code> What is <code>a[a.length - 1]</code>?',o:['16','23','5','Error'],a:1,e:'a.length is 5, so a[4] is the last element: 23.'},
+ arrays2d1:{q:'<code>int[][] t = { {3, 6, 9}, {2, 4, 8} };</code> What is <code>t[0][2] + t[1][0]</code>?',o:['11','5','10','15'],a:0,e:'t[0][2] is 9 (row 0, column 2) and t[1][0] is 2 (row 1, column 0). 9 + 2 = 11.'},
+ arrays2d2:{q:'In <code>for (String[] row : seats)</code>, what does <code>row</code> hold each time?',o:['One name','The index of the row','One whole row (an array of names)','The number of rows'],a:2,e:'The outer for-each walks the outer array, whose elements are themselves arrays, so row is a String[].'}
+};
+
+const QUIZ = {}, PAPER = {}, IDE = {};
+/* =========================================================
+   ENGINE
+   ========================================================= */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function dedent(s){
+  s=s.replace(/^\s*\n/,'').replace(/\s+$/,'');
+  const lines=s.split('\n');
+  const ind=Math.min(...lines.filter(l=>l.trim()).map(l=>l.match(/^ */)[0].length));
+  return lines.map(l=>l.slice(ind)).join('\n');
+}
+const TOK=/(\/\/.*$)|("(?:[^"\\\n]|\\.)*")|('(?:[^'\\]|\\.)')|\b(abstract|boolean|break|byte|case|catch|char|class|continue|default|do|double|else|extends|final|finally|float|for|if|import|instanceof|int|interface|long|new|package|private|protected|public|return|short|static|super|switch|this|throw|throws|try|void|while|true|false|null)\b|\b(\d+(?:\.\d+)?)\b|\b([A-Z]\w*)\b|(\w+)(?=\s*\()/gm;
+function hl(code){
+  let out='',last=0;
+  code.replace(TOK,(m,cm,st,ch,kw,num,ty,fn,off)=>{
+    out+=esc(code.slice(last,off));
+    const cls=cm?'c':(st||ch)?'s':kw?'k':num?'n':ty?'t':'f';
+    out+=`<span class="${cls}">${esc(m)}</span>`; last=off+m.length; return m;
+  });
+  return out+esc(code.slice(last));
+}
+function codeHTML(code){
+  return `<pre class="code">${code.split('\n').map((l,i)=>`<div class="ln" data-l="${i+1}"><span class="num">${i+1}</span><span>${hl(l)||' '}</span></div>`).join('')}</pre>`;
+}
+function copyText(t){
+  const done=()=>toast('Code copied. Paste it into your IDE.');
+  if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(t).then(done,()=>fallback());}else fallback();
+  function fallback(){const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){toast('Copy failed: select the code manually.');}ta.remove();}
+}
+let toastT; function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),1800);}
+function cbox(code,title,{run=null}={}){
+  const w=document.createElement('div'); w.className='cbox';
+  w.innerHTML=`<div class="bar-top"><span class="dots"><i></i><i></i><i></i></span><span class="ttl">${esc(title||'Main.java')}</span>${run!==null?'<span class="predict-hint">predict first →</span><button class="mini-btn run">▶ Run</button>':''}<button class="mini-btn cp">Copy</button></div>${codeHTML(code)}${run!==null?'<div class="console"></div>':''}`;
+  $('.cp',w).onclick=()=>copyText(code);
+  if(run!==null){
+    const con=$('.console',w), btn=$('.run',w); let timer;
+    btn.onclick=()=>{
+      clearInterval(timer); con.classList.add('show'); con.textContent=''; let k=0;
+      const step=Math.max(1,Math.ceil(run.length/60));
+      timer=setInterval(()=>{k+=step;con.textContent=run.slice(0,k);if(k>=run.length)clearInterval(timer);},18);
+      btn.textContent='↻ Run again'; const ph=$('.predict-hint',w); if(ph)ph.remove();
+    };
+  }
+  return w;
+}
+function trimNL(s){return s.replace(/^\n/,'').replace(/\n\s*$/,'');}
+
+/* ---- examples & code blocks in markup ---- */
+function buildStatic(){
+  $$('.example').forEach(el=>{
+    const code=dedent($('script[type="text/x-java"]',el).textContent);
+    const o=$('script[type="text/x-output"]',el);
+    el.replaceChildren(cbox(code,el.dataset.title,{run:o?trimNL(o.textContent):null}));
+  });
+  $$('.codeblock').forEach(el=>{
+    const s=$('script[type="text/x-java"]',el); if(!s)return;
+    el.replaceChildren(cbox(dedent(s.textContent),el.dataset.title));
+  });
+}
+
+/* ---- tracer ---- */
+function buildSteps(t){
+  const io={buf:'',print(s){this.buf+=String(s);},println(s=''){this.buf+=String(s)+'\n';}};
+  const steps=[];
+  for(const [line,vars,note,h] of t.gen(io)){
+    steps.push({line,vars:JSON.parse(JSON.stringify(vars||{})),note,h,out:io.buf});
+    if(steps.length>600)break;
+  }
+  return steps;
+}
+function fmtVal(v){ if(typeof v==='number'&&!Number.isInteger(v))return fmtD(v); return v; }
+function varHTML(name,v,h,changed){
+  let body;
+  if(Array.isArray(v)&&Array.isArray(v[0])){
+    const H=h&&h.arr===name?h:null;
+    body=`<table class="g2"><tr><th></th>${v[0].map((_,c)=>`<th>[${c}]</th>`).join('')}</tr>${v.map((row,r)=>`<tr><th>[${r}]</th>${row.map((x,c)=>{const on=H&&H.r===r&&(H.c===undefined?false:H.c===c);const rowOn=H&&H.r===r&&H.c===undefined;return `<td class="${on?'hl':rowOn?'row-hl':''}">${esc(fmtVal(x))}</td>`;}).join('')}</tr>`).join('')}</table>`;
+  }else if(Array.isArray(v)){
+    const H=h&&h.arr===name?h:null;
+    body=`<div class="arr">${v.map((x,i)=>`<div class="cell ${H&&H.i===i?'hl':''}"><span>${esc(fmtVal(x))}</span><small>[${i}]</small></div>`).join('')}</div>`;
+  }else body=`<span class="vl">${esc(fmtVal(v))}</span>`;
+  return `<div class="var ${changed?'chg':''}"><span class="nm">${esc(name)}</span>${body}</div>`;
+}
+function normOut(s){return s.replace(/\r/g,'').split('\n').map(l=>l.trimEnd()).join('\n').replace(/\n+$/,'').trim();}
+function looseOut(s){return s.replace(/\s+/g,' ').trim().toLowerCase();}
+function mountTracer(slot,id){
+  const t=TRACES[id]; const code=dedent(t.code); const steps=buildSteps(t);
+  slot.innerHTML=`<div class="tracer" tabindex="0">
+    <div class="tr-head"><b>${esc(t.title)}</b><span class="tr-count"></span></div>
+    <div class="tr-predict"><label for="p-${id}">✍️ Your predicted output:</label><textarea id="p-${id}" rows="2" placeholder="Type what you think will be printed…"></textarea></div>
+    <div class="tr-body"><div>${codeHTML(code)}</div>
+      <div class="tr-side"><div><h4>What's happening</h4></div><div class="tr-note"></div><h4>Variables</h4><div class="tr-vars"></div><h4>Console output</h4><pre class="tr-out"></pre></div></div>
+    <div class="tr-ctrl"><button class="btn" data-a="reset" title="Back to start">⟲</button><button class="btn" data-a="back">◀ Back</button><button class="btn primary" data-a="next">Step ▶</button><button class="btn" data-a="play">▶▶ Auto</button><input type="range" min="0" value="0"><span class="kbd-tip">← → keys work too</span></div>
+    <div class="tr-result"></div></div>`;
+  const box=$('.tracer',slot), lines=$$('.ln',box), note=$('.tr-note',box), vars=$('.tr-vars',box), out=$('.tr-out',box), cnt=$('.tr-count',box), rng=$('input[type=range]',box), res=$('.tr-result',box), pred=$('textarea',box);
+  rng.max=steps.length; let k=0, timer=null;
+  function render(){
+    lines.forEach(l=>l.classList.remove('cur'));
+    if(k===0){ note.innerHTML='Press <b>Step ▶</b> to start. Line '+steps[0].line+' runs first.'; vars.innerHTML='<span style="color:var(--muted);font-size:.9rem">No variables yet</span>'; out.textContent=''; cnt.textContent=`Step 0 / ${steps.length}`; rng.value=0; res.className='tr-result'; return; }
+    const s=steps[k-1], p=k>1?steps[k-2]:{vars:{}};
+    const ln=lines[s.line-1]; ln.classList.add('cur');
+    const pre=ln.closest('.code'); const top=ln.offsetTop-pre.clientHeight/2; if(pre.scrollHeight>pre.clientHeight) pre.scrollTo({top,behavior:'smooth'});
+    note.innerHTML=s.note||'';
+    const keys=Object.keys(s.vars);
+    vars.innerHTML=keys.length?keys.map(n=>varHTML(n,s.vars[n],s.h,JSON.stringify(s.vars[n])!==JSON.stringify(p.vars[n]))).join(''):'<span style="color:var(--muted);font-size:.9rem">No variables in scope</span>';
+    out.textContent=s.out; out.scrollTop=out.scrollHeight;
+    cnt.textContent=`Step ${k} / ${steps.length}`; rng.value=k;
+    if(k===steps.length){
+      const guess=pred.value.trim(); res.classList.add('show');
+      if(!guess){res.className='tr-result show';res.innerHTML='🏁 Finished! Next time, type a prediction first and see if you are right.';}
+      else if(normOut(guess)===normOut(s.out)||looseOut(guess)===looseOut(s.out)){res.className='tr-result show ok';res.innerHTML='🎉 Your prediction matches the actual output!';}
+      else{res.className='tr-result show bad';res.innerHTML='Not quite. Compare your prediction with the console output, then step back to find where your trace went differently.';}
+      markDone(slot.closest('.topic').id,'trace');
+    } else res.className='tr-result';
+  }
+  function stop(){clearInterval(timer);timer=null;$('[data-a=play]',box).textContent='▶▶ Auto';}
+  box.addEventListener('click',e=>{const a=e.target.closest('[data-a]')?.dataset.a;if(!a)return;
+    if(a==='next'){if(k<steps.length)k++;}
+    if(a==='back'){if(k>0)k--;}
+    if(a==='reset'){k=0;stop();}
+    if(a==='play'){ if(timer){stop();return;} if(k>=steps.length)k=0; $('[data-a=play]',box).textContent='⏸ Pause'; timer=setInterval(()=>{if(k>=steps.length){stop();return;}k++;render();},700); }
+    render();});
+  rng.oninput=()=>{k=+rng.value;render();};
+  box.addEventListener('keydown',e=>{if(e.target===pred)return;if(e.key==='ArrowRight'){k=Math.min(steps.length,k+1);render();e.preventDefault();}if(e.key==='ArrowLeft'){k=Math.max(0,k-1);render();e.preventDefault();}});
+  render();
+}
+function buildTracers(){
+  $$('[data-tracers]').forEach(seg=>{
+    const slot=seg.parentElement.querySelector('.tracer-slot');
+    const go=b=>{$$('button',seg).forEach(x=>x.classList.toggle('on',x===b));mountTracer(slot,b.dataset.t);};
+    seg.addEventListener('click',e=>{const b=e.target.closest('button');if(b)go(b);});
+    go($('button.on',seg)||$('button',seg));
+  });
+}
+
+/* ---- questions & quizzes ---- */
+function questionEl(q,num,onAnswer,order){
+  const d=document.createElement('div'); d.className='q';
+  const idx=order||q.o.map((_,i)=>i);
+  d.innerHTML=`<div class="qn">${num}</div><div class="qt">${q.q}</div>${q.code?codeHTML(dedent(q.code)):''}<div class="opts" style="margin-top:${q.code?'12px':'0'}">${idx.map((oi,j)=>`<button class="opt" data-i="${oi}"><span class="L">${'ABCDE'[j]}</span><span>${q.o[oi]}</span></button>`).join('')}</div><div class="fb"></div>`;
+  $('.opts',d).addEventListener('click',e=>{
+    const b=e.target.closest('.opt'); if(!b||b.disabled)return;
+    const pick=+b.dataset.i, ok=pick===q.a;
+    $$('.opt',d).forEach(x=>{x.disabled=true;const i=+x.dataset.i;if(i===q.a)x.classList.add('right');else if(i===pick)x.classList.add('wrong');else x.classList.add('dim');});
+    const fb=$('.fb',d); fb.className='fb show '+(ok?'ok':'bad'); fb.innerHTML=`<b>${ok?'✓ Correct!':'✗ Not quite.'}</b> <span>${q.e}</span>`;
+    onAnswer&&onAnswer(ok);
+  });
+  return d;
+}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function buildQuiz(el){
+  const topic=el.dataset.topic, qs=QUIZ[topic];
+  function start(shuf){
+    let answered=0,score=0;
+    el.innerHTML=`<div class="quiz-head"><span class="quiz-score">Score: <b class="sc">0</b> / ${qs.length}</span><div class="bar"><i></i></div><span class="qa-count" style="color:var(--muted);font-size:.88rem">0 of ${qs.length} answered</span></div><div class="qs"></div><div class="quiz-done"><div class="big"></div><p class="msg"></p><button class="btn primary retake">↻ Retake (shuffled)</button></div>`;
+    const list=$('.qs',el);
+    const order=shuf?shuffle(qs.map((_,i)=>i)):qs.map((_,i)=>i);
+    order.forEach((qi,n)=>{
+      const q=qs[qi];
+      list.appendChild(questionEl(q,`QUESTION ${n+1}`,ok=>{
+        answered++; if(ok)score++;
+        $('.sc',el).textContent=score; $('.bar>i',el).style.width=(answered/qs.length*100)+'%'; $('.qa-count',el).textContent=`${answered} of ${qs.length} answered`;
+        if(answered===qs.length){
+          const pct=Math.round(score/qs.length*100), done=$('.quiz-done',el);
+          done.classList.add('show'); $('.big',done).textContent=`${score} / ${qs.length}`;
+          $('.msg',done).textContent=pct===100?'Perfect score! You have mastered this lesson. 🏆':pct>=75?'Great job! Review the explanations for the ones you missed.':pct>=50?'Good effort. Go back to the discussion and the code tracer, then try again.':'Keep going! Re-read the discussion, step through the tracer, and retake the quiz.';
+          saveQuiz(topic,score,qs.length);
+        }
+      },shuf?shuffle(q.o.map((_,i)=>i)):null));
+    });
+    $('.retake',el).onclick=()=>{start(true);el.scrollIntoView({behavior:'smooth'});};
+  }
+  start(false);
+}
+function buildQuick(){
+  $$('.quick').forEach(el=>{const q=QUICK[el.dataset.q]; if(q) el.appendChild(questionEl(q,'QUICK CHECK'));});
+}
+
+/* ---- paper activities ---- */
+function normCell(s){return String(s).trim().toLowerCase().replace(/\s+/g,' ').replace(/^"|"$/g,'');}
+function cellOk(input,exp){
+  const a=normCell(input), e=normCell(exp);
+  if(e==='—') return ['','-','—','n/a','none','x'].includes(a);
+  if(a===e) return true;
+  if(a.replace(/[\s,]/g,'')===e.replace(/[\s,]/g,'')) return true;
+  if(e==='yes'&&['y','true','swap'].includes(a)) return true;
+  if(e==='no'&&['n','false'].includes(a)) return true;
+  return false;
+}
+function buildPaper(el){
+  PAPER[el.dataset.topic].forEach((p,n)=>{
+    const d=document.createElement('div'); d.className='paper-item';
+    let html=`<div class="item-head"><span class="lvl ${p.lvl}">${p.lvl}</span><h3>${n+1}. ${esc(p.title)}</h3></div><p>${p.instr||''}</p>${codeHTML(dedent(p.code))}`;
+    if(p.cols){
+      html+=`<span class="lbl">Trace table</span><div class="ttable-wrap"><table class="ttable"><tr>${p.cols.map(c=>`<th>${esc(c)}</th>`).join('')}</tr>${p.rows.map(r=>`<tr>${r.map(c=>c.startsWith('#')?`<td class="given">${esc(c.slice(1))}</td>`:`<td><input data-exp="${esc(c)}" aria-label="answer"></td>`).join('')}</tr>`).join('')}</table></div>`;
+    }
+    if(p.output!==undefined){
+      html+=`<span class="lbl">Output</span><textarea class="out-box" rows="${Math.max(2,p.output.split('\n').length+1)}" placeholder="Write the exact output…"></textarea><div class="key out-key"><b>Answer key: output</b><pre>${esc(p.output)}</pre></div>`;
+    }
+    if(p.qa){
+      html+=`<span class="lbl">Questions</span>`+p.qa.map(q=>`<div class="qa"><div class="ask">${q.q}</div><div class="key"><b>Answer:</b> ${q.a}</div></div>`).join('');
+    }
+    html+=`<div class="btn-row">${(p.cols||p.output!==undefined)?'<button class="btn primary" data-a="check">✓ Check my answers</button>':''}<button class="btn" data-a="key">👁 Show answer key</button><button class="btn ghost" data-a="clear">Clear</button><span class="status"></span></div>`;
+    d.innerHTML=html;
+    const st=$('.status',d);
+    d.addEventListener('click',e=>{
+      const a=e.target.closest('[data-a]')?.dataset.a; if(!a)return;
+      const ins=$$('input[data-exp]',d), ob=$('.out-box',d);
+      if(a==='check'){
+        let right=0,total=0;
+        ins.forEach(i=>{total++;const ok=cellOk(i.value,i.dataset.exp);i.classList.toggle('ok',ok);i.classList.toggle('bad',!ok);if(ok)right++;});
+        if(ob){total++;const ok=normOut(ob.value)===normOut(p.output)||looseOut(ob.value)===looseOut(p.output);ob.classList.toggle('ok',ok);ob.classList.toggle('bad',!ok);if(ok)right++;}
+        st.className='status '+(right===total?'ok':'bad'); st.textContent=right===total?`All ${total} correct! 🎉`:`${right} / ${total} correct. Fix the red ones.`;
+        if(right===total)markDone(el.closest('.topic').id,'paper');
+      }
+      if(a==='key'){
+        ins.forEach(i=>{i.value=i.dataset.exp;i.classList.add('ok');i.classList.remove('bad');});
+        if(ob){ob.value=p.output;ob.classList.add('ok');ob.classList.remove('bad');}
+        $$('.key',d).forEach(k=>k.classList.add('show')); st.className='status';st.textContent='Answer key shown.';
+      }
+      if(a==='clear'){
+        ins.forEach(i=>{i.value='';i.classList.remove('ok','bad');}); if(ob){ob.value='';ob.classList.remove('ok','bad');}
+        $$('.key',d).forEach(k=>k.classList.remove('show')); st.textContent='';
+      }
+    });
+    el.appendChild(d);
+  });
+}
+
+/* ---- IDE activities ---- */
+function buildIDE(el){
+  IDE[el.dataset.topic].forEach((p,n)=>{
+    const d=document.createElement('div'); d.className='ide-item';
+    const inLines=(p.input||'').split('\n');
+    let sample=esc(p.output);
+    if(p.input){ // colour typed input yellow
+      let li=0; sample=p.output.split('\n').map(line=>{
+        const want=inLines[li]; if(want!==undefined&&line.endsWith(': '+want)){li++;return esc(line.slice(0,line.length-want.length))+`<span class="in">${esc(want)}</span>`;} return esc(line);
+      }).join('\n');
+    }
+    d.innerHTML=`<div class="item-head"><span class="lvl ${p.lvl}">${p.lvl}</span><h3>${n+1}. ${esc(p.title)}</h3></div>
+      <p>${p.problem}</p>
+      <div class="io">${p.input?`<div><span class="lbl" style="margin-top:0">Sample input</span><pre>${esc(p.input)}</pre></div>`:''}<div style="${p.input?'':'grid-column:1/-1'}"><span class="lbl" style="margin-top:0">Expected output${p.input?' <small style="text-transform:none;letter-spacing:0">(yellow = typed by user)</small>':''}</span><pre>${sample}</pre></div></div>
+      <span class="lbl">Starter code</span><div class="starter"></div>
+      <div class="hints">${p.hints.map((h,i)=>`<div class="hint"><b>Hint ${i+1}:</b> ${h}</div>`).join('')}<button class="btn" data-a="hint">💡 Show a hint (0/${p.hints.length})</button></div>
+      <details class="sol"><summary>🔓 Show solution (try it yourself first!)</summary><div class="solbox"></div></details>
+      <span class="lbl">Self-check</span>
+      <ul class="checklist"><li><label><input type="checkbox"> My program compiles with no errors</label></li><li><label><input type="checkbox"> My output matches the expected output exactly</label></li><li><label><input type="checkbox"> I tested it with at least one other input</label></li><li><label><input type="checkbox"> My variable names are meaningful and my code is indented</label></li></ul>`;
+    $('.starter',d).appendChild(cbox(dedent(p.starter),'Starter.java'));
+    $('.solbox',d).appendChild(cbox(dedent(p.solution),'Solution.java'));
+    let shown=0; const hb=$('[data-a=hint]',d), hs=$$('.hint',d);
+    hb.onclick=()=>{ if(shown<hs.length){hs[shown].classList.add('show');shown++;} hb.textContent=shown<hs.length?`💡 Show next hint (${shown}/${hs.length})`:'All hints shown'; hb.disabled=shown>=hs.length; };
+    $$('.checklist input',d).forEach(c=>c.onchange=()=>{ if($$('.checklist input',el).some(x=>x.checked)) markDone(el.closest('.topic').id,'ide'); });
+    el.appendChild(d);
+  });
+}
+
+/* ---- labs ---- */
+function loopLab(){
+  const T=$('#lab-type'),S=$('#lab-start'),O=$('#lab-op'),L=$('#lab-limit'),U=$('#lab-upd');
+  const codeSlot=$('#lab-code'), out=$('#lab-out'), alert=$('#lab-alert');
+  const cmp={'<':(a,b)=>a<b,'<=':(a,b)=>a<=b,'>':(a,b)=>a>b,'>=':(a,b)=>a>=b,'!=':(a,b)=>a!==b};
+  const upd={'i++':i=>i+1,'i--':i=>i-1,'i += 2':i=>i+2,'i -= 2':i=>i-2,'i += 3':i=>i+3,'i *= 2':i=>i*2};
+  function run(){
+    const t=T.value,s=parseInt(S.value)||0,op=O.value,lim=parseInt(L.value)||0,u=U.value;
+    let code;
+    if(t==='for') code=`for (int i = ${s}; i ${op} ${lim}; ${u}) {\n    System.out.print(i + " ");\n}`;
+    else if(t==='while') code=`int i = ${s};\nwhile (i ${op} ${lim}) {\n    System.out.print(i + " ");\n    ${u};\n}`;
+    else code=`int i = ${s};\ndo {\n    System.out.print(i + " ");\n    ${u};\n} while (i ${op} ${lim});`;
+    codeSlot.replaceChildren(cbox(code,'LoopLab.java'));
+    const vals=[]; let i=s, n=0, cap=60, inf=false;
+    if(t==='do'){ do{vals.push(i);i=upd[u](i);n++; if(n>=cap){inf=cmp[op](i,lim);break;}}while(cmp[op](i,lim)); }
+    else { while(cmp[op](i,lim)){vals.push(i);i=upd[u](i);n++; if(n>=cap){inf=cmp[op](i,lim);break;}} }
+    out.innerHTML=vals.length?vals.map((v,j)=>`<span class="chip" style="animation-delay:${Math.min(j,30)*25}ms">${v}</span>`).join(''):'<span style="color:var(--muted)">(nothing printed: the body never ran)</span>';
+    $('#lab-n').textContent=inf?`${n}+ (stopped)`:n;
+    $('#lab-final').textContent=t==='for'?`${i} (but i is out of scope after a for loop)`:i;
+    alert.classList.toggle('show',inf);
+    alert.textContent=inf?`⚠ Infinite loop! The condition i ${op} ${lim} never becomes false with ${u}. We stopped it after ${cap} iterations. A real program would run forever.`:'';
+  }
+  [T,S,O,L,U].forEach(x=>x.addEventListener('input',run));
+  $$('#loopLab [data-preset]').forEach(b=>b.onclick=()=>{const [s,op,lim,u,t]=b.dataset.preset.split(',');S.value=s;O.value=op;L.value=lim;U.value=u;T.value=t;run();});
+  run();
+}
+function arrayLab(){
+  const base=[31,28,31,30,31,30,31,31,30,31,30,31], mon=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  let arr=base.slice(); const cells=$('#arrCells'), idx=$('#arrIdx'), ex=$('#arrExpr');
+  function draw(){
+    const i=+idx.value;
+    cells.innerHTML=arr.map((v,k)=>`<div class="viz-cell ${k===i?'sel':''}" data-k="${k}"><span class="mon">${mon[k]}</span><div class="box">${v}</div><span class="idx">[${k}]</span></div>`).join('');
+    if(i<0||i>=arr.length) ex.innerHTML=`month_days[${i}] → <span class="err">ArrayIndexOutOfBoundsException: Index ${i} out of bounds for length 12</span>`;
+    else ex.innerHTML=`month_days[${i}] → <span class="res">${arr[i]}</span>  <span style="color:#7d8494">// ${mon[i]}</span>`;
+  }
+  cells.addEventListener('click',e=>{const c=e.target.closest('.viz-cell');if(c){idx.value=c.dataset.k;draw();}});
+  idx.oninput=draw;
+  $('#arrSet').onclick=()=>{const i=+idx.value,v=parseInt($('#arrVal').value);if(i<0||i>=arr.length){toast('Cannot assign: index out of bounds!');draw();return;}arr[i]=isNaN(v)?0:v;draw();ex.innerHTML=`month_days[${i}] = ${arr[i]}; <span class="res">// stored ✓</span>`;};
+  $('#arrReset').onclick=()=>{arr=base.slice();draw();};
+  draw();
+}
+function gridLab(){
+  const g=[[85,90,78,92],[88,76,95,81],[70,85,89,94]];
+  const tbl=$('#gridTbl'), ex=$('#gridExpr'); let timer=null;
+  tbl.innerHTML=`<tr><th></th>${g[0].map((_,c)=>`<th>col ${c}</th>`).join('')}</tr>`+g.map((row,r)=>`<tr><th class="rowh" data-r="${r}">row ${r}</th>${row.map((v,c)=>`<td data-r="${r}" data-c="${c}">${v}</td>`).join('')}</tr>`).join('');
+  const clear=()=>$$('td',tbl).forEach(t=>t.classList.remove('sel','row','visited'));
+  tbl.addEventListener('click',e=>{
+    if(timer)return;
+    const td=e.target.closest('td'), th=e.target.closest('th.rowh'); clear();
+    if(td){td.classList.add('sel');ex.innerHTML=`scores[${td.dataset.r}][${td.dataset.c}] → <span class="res">${td.textContent}</span>`;}
+    if(th){const r=+th.dataset.r;$$(`td[data-r="${r}"]`,tbl).forEach(t=>t.classList.add('row'));ex.innerHTML=`scores[${r}] → <span class="res">{${g[r].join(', ')}}</span>  <span style="color:#7d8494">// one whole row is a 1D array</span>`;}
+  });
+  $('#gridPlay').onclick=()=>{
+    if(timer){clearInterval(timer);timer=null;$('#gridPlay').textContent='▶ Animate nested for loop';return;}
+    clear(); const order=[]; const byRow=$('#gridOrder').value==='row';
+    if(byRow){for(let r=0;r<3;r++)for(let c=0;c<4;c++)order.push([r,c]);} else {for(let c=0;c<4;c++)for(let r=0;r<3;r++)order.push([r,c]);}
+    let k=0,sum=0; $('#gridSum').textContent=0; $('#gridPlay').textContent='⏸ Stop';
+    timer=setInterval(()=>{
+      $$('td.sel',tbl).forEach(t=>{t.classList.remove('sel');t.classList.add('visited');});
+      if(k>=order.length){clearInterval(timer);timer=null;$('#gridPlay').textContent='▶ Animate nested for loop';ex.innerHTML=`<span class="res">Done: visited all 12 cells. Sum = ${sum}</span>`;return;}
+      const [r,c]=order[k++]; sum+=g[r][c]; $('#gridSum').textContent=sum;
+      $(`td[data-r="${r}"][data-c="${c}"]`,tbl).classList.add('sel');
+      ex.innerHTML=byRow?`row = ${r}, col = ${c}  →  scores[${r}][${c}] = <span class="res">${g[r][c]}</span>`:`col = ${c}, row = ${r}  →  scores[${r}][${c}] = <span class="res">${g[r][c]}</span>`;
+    },+$('#gridSpeed').value);
+  };
+}
+function methodsBits(){
+  const A={public:'<b>public</b>: an access modifier. The method can be used from other classes too.',static:'<b>static</b>: the method belongs to the class itself, so main can call it directly without creating an object.',type:'<b>int</b>: the <b>return type</b>. This method gives back an int. Use <code>void</code> if it returns nothing.',name:'<b>sum</b>: the method name. Use a verb that describes what it does (camelCase).',params:'<b>(int a, int b)</b>: the <b>parameters</b>. Variables that receive the values (arguments) passed by the caller.',body:'<b>{ … }</b>: the method <b>body</b>. The statements that run when the method is called. <code>return</code> sends a value back.'};
+  $('#anat').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;$$('#anat button').forEach(x=>x.classList.toggle('on',x===b));$('#anatExp').innerHTML=A[b.dataset.a];});
+  $('#wwSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;$$('#wwSeg button').forEach(x=>x.classList.toggle('on',x===b));$('#ww-without').style.display=b.dataset.v==='without'?'':'none';$('#ww-with').style.display=b.dataset.v==='with'?'':'none';});
+}
+
+/* ---- progress ---- */
+const KEY='java-essentials-progress-v1';
+let PROG={}; try{PROG=JSON.parse(localStorage.getItem(KEY))||{};}catch(e){PROG={};}
+function saveProg(){try{localStorage.setItem(KEY,JSON.stringify(PROG));}catch(e){}}
+function markDone(topic,key){PROG[topic]=PROG[topic]||{};if(!PROG[topic][key]){PROG[topic][key]=1;saveProg();refreshProg();}}
+function saveQuiz(topic,s,n){PROG[topic]=PROG[topic]||{};const b=PROG[topic].best||0;if(s>=b)PROG[topic].best=s;PROG[topic].quizN=n;PROG[topic].quiz=1;saveProg();refreshProg();}
+function buildTOC(){
+  $$('.topic[data-topic]').forEach(tp=>{
+    const toc=$('.toc',tp), blocks=$$('.block',tp);
+    toc.innerHTML=blocks.map(b=>`<a href="#${b.id}" data-k="${b.id.split('-').pop()}"><span class="ck">✓</span>${b.dataset.label}</a>`).join('')+`<div class="toc-prog"><div class="bar"><i></i></div><span></span></div>`;
+    toc.addEventListener('click',e=>{const a=e.target.closest('a');if(!a)return;e.preventDefault();$(a.getAttribute('href')).scrollIntoView({behavior:'smooth'});});
+  });
+  const io=new IntersectionObserver(ents=>ents.forEach(en=>{
+    if(!en.isIntersecting)return; const b=en.target, tp=b.closest('.topic');
+    $$('.toc a',tp).forEach(a=>a.classList.toggle('here',a.getAttribute('href')==='#'+b.id));
+    const k=b.id.split('-').pop(); if(['obj','disc','lab'].includes(k)) markDone(tp.id,k);
+  }),{rootMargin:'-30% 0px -55% 0px'});
+  $$('.block').forEach(b=>io.observe(b));
+}
+function refreshProg(){
+  $$('.topic[data-topic]').forEach(tp=>{
+    const p=PROG[tp.id]||{}, links=$$('.toc a',tp); let done=0;
+    links.forEach(a=>{const ok=!!p[a.dataset.k];a.classList.toggle('done',ok);if(ok)done++;});
+    const pct=Math.round(done/links.length*100);
+    $('.toc-prog .bar>i',tp).style.width=pct+'%'; $('.toc-prog span',tp).textContent=`${done} of ${links.length} sections done`;
+    const card=$(`[data-prog="${tp.id}"]`);
+    if(card) card.innerHTML=`<div class="bar"><i style="width:${pct}%"></i></div><span>${pct}% complete${p.quiz?` · Best quiz: ${p.best}/${p.quizN}`:''}</span>`;
+  });
+}
+
+/* ---- routing, theme, print ---- */
+let CUR='home';
+function curHash(){try{return location.hash.slice(1);}catch(e){return '';}}
+function go(h){
+  CUR=h||'home';
+  try{history.replaceState(null,'','#'+CUR);}catch(e){}
+  route(CUR);
+}
+document.addEventListener('click',e=>{
+  if(e.defaultPrevented)return;
+  const a=e.target.closest('a[href^="#"]'); if(!a)return;
+  e.preventDefault(); go(a.getAttribute('href').slice(1));
+});
+function route(force){
+  const h=(typeof force==='string'?force:curHash())||'home';
+  let topic=document.getElementById(h);
+  if(topic&&!topic.classList.contains('topic')) topic=topic.closest('.topic');
+  if(!topic) topic=$('#home');
+  const changed=!topic.classList.contains('show');
+  $$('.topic').forEach(t=>t.classList.toggle('show',t===topic));
+  $$('#tabs a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+topic.id));
+  if(h===topic.id||changed) window.scrollTo({top:0,behavior:'instant'});
+  if(h!==topic.id){const el=document.getElementById(h); if(el) setTimeout(()=>el.scrollIntoView(),30);}
+}
+window.addEventListener('hashchange',()=>route());
+(function theme(){
+  let t=null; try{t=localStorage.getItem('java-essentials-theme');}catch(e){}
+  if(t)document.documentElement.dataset.theme=t;
+  $('#themeBtn').onclick=()=>{
+    const cur=document.documentElement.dataset.theme||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+    const nx=cur==='dark'?'light':'dark'; document.documentElement.dataset.theme=nx; try{localStorage.setItem('java-essentials-theme',nx);}catch(e){}
+  };
+})();
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-print]'); if(!b)return;
+  document.body.classList.add('print-paper'); window.print();
+  setTimeout(()=>document.body.classList.remove('print-paper'),500);
+});
+document.addEventListener('click',e=>{const f=e.target.closest('.flip');if(f)f.classList.toggle('on');});
+
+/* ---- boot ---- */
+buildStatic();
+buildQuick();
+
+
+
+buildTracers();
+loopLab(); arrayLab(); gridLab(); methodsBits();
+buildTOC(); refreshProg(); route();
+</script>
+<!--TOGGLE-PATCH-START-->
+<style>
+.tg-btn{margin-left:auto;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface2);color:var(--ink);border-radius:999px;padding:6px 14px;font:600 .85rem var(--font-body);cursor:pointer;white-space:nowrap}
+.tg-btn:hover{border-color:var(--accent)}
+.tg-btn .chev{display:inline-block;transition:transform .2s}
+.tg-open>.tg-ctl .chev,.tg-open>h2 .chev,.tg-open>.item-head .chev{transform:rotate(180deg)}
+.tg-body{display:none}
+.tg-open>.tg-body{display:block;animation:tgIn .2s ease}
+@keyframes tgIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.tg-sum{margin:2px 0 0;color:var(--muted);font-size:.92rem}
+.tg-open>.tg-sum{display:none}
+.tg-all{display:flex;gap:8px;margin:4px 0 6px}
+.tg-all button{border:0;background:none;color:var(--accent);font:600 .85rem var(--font-body);cursor:pointer;padding:2px 0}
+.paper-item>.item-head,.ide-item>.item-head{cursor:pointer;margin-bottom:0;user-select:none}
+.paper-item>.item-head .tg-btn,.ide-item>.item-head .tg-btn{padding:4px 12px;font-size:.8rem}
+.paper-item.tg-open>.item-head,.ide-item.tg-open>.item-head{margin-bottom:6px}
+.paper-item,.ide-item{padding:14px 18px}
+.quick .tg-ctl{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed var(--accent);background:var(--accent-soft);color:var(--ink);border-radius:12px;padding:12px 16px;font:600 .95rem var(--font-body);cursor:pointer}
+.quick .tg-ctl .chev{margin-left:auto}
+.quick.tg-open .tg-ctl{border-radius:12px 12px 0 0}
+.quick .tg-body .q{margin-top:0;border-top-left-radius:0;border-top-right-radius:0}
+@media print{.tg-body{display:block!important}.tg-btn,.tg-all,.tg-sum,.quick .tg-ctl{display:none!important}}
+</style>
+<script>
+(function(){
+  const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+  const chev='<span class="chev">▾</span>';
+  function setOpen(el,open){
+    el.classList.toggle('tg-open',open);
+    const b=el.querySelector(':scope > h2 .tg-btn, :scope > .item-head .tg-btn');
+    if(b) b.firstChild.textContent=open?(b.dataset.hide||'Hide '):(b.dataset.show||'Show ');
+  }
+  function wrapAfter(el,first){
+    const body=document.createElement('div'); body.className='tg-body';
+    let n=first.nextSibling;
+    while(n){ const nx=n.nextSibling; body.appendChild(n); n=nx; }
+    el.appendChild(body); return body;
+  }
+  // 1) Section-level: Quiz, Paper Activity, IDE Activity
+  $$('section.block').forEach(sec=>{
+    const k=sec.id.split('-').pop();
+    if(!['quiz','paper','ide'].includes(k)) return;
+    const h2=$(':scope > h2',sec); if(!h2) return;
+    let sum='';
+    if(k==='quiz'){ const n=$$('.q',sec).length; sum=`${n} multiple-choice questions with instant feedback.`; }
+    if(k==='paper'){ const n=$$('.paper-item',sec).length; sum=`${n} tracing activit${n===1?'y':'ies'} to answer on screen or on paper.`; }
+    if(k==='ide'){ const n=$$('.ide-item',sec).length; sum=`${n} coding problem${n===1?'':'s'} with hints and solutions.`; }
+    wrapAfter(sec,h2);
+    const p=document.createElement('p'); p.className='tg-sum'; p.textContent=sum; sec.insertBefore(p,$(':scope > .tg-body',sec));
+    const label=k==='quiz'?'quiz':'activities';
+    const b=document.createElement('button'); b.type='button'; b.className='tg-btn'; b.dataset.show=`Show ${label} `; b.dataset.hide=`Hide ${label} `;
+    b.innerHTML=`Show ${label} ${chev}`; h2.appendChild(b);
+    h2.style.cursor='pointer';
+    h2.addEventListener('click',()=>setOpen(sec,!sec.classList.contains('tg-open')));
+    if(k!=='quiz'){
+      const all=document.createElement('div'); all.className='tg-all no-print';
+      all.innerHTML='<button type="button" data-x="1">Expand all</button><span style="color:var(--line)">|</span><button type="button" data-x="0">Collapse all</button>';
+      const body=$(':scope > .tg-body',sec); body.insertBefore(all,body.firstChild);
+      all.addEventListener('click',e=>{const x=e.target.closest('[data-x]'); if(!x)return; $$('.paper-item,.ide-item',sec).forEach(it=>setOpen(it,x.dataset.x==='1'));});
+    }
+    setOpen(sec,false);
+  });
+  // 2) Item-level: each paper and IDE activity
+  $$('.paper-item,.ide-item').forEach(it=>{
+    const head=$(':scope > .item-head',it); if(!head) return;
+    wrapAfter(it,head);
+    const b=document.createElement('button'); b.type='button'; b.className='tg-btn'; b.dataset.show='Open '; b.dataset.hide='Close ';
+    b.innerHTML=`Open ${chev}`; head.appendChild(b);
+    head.addEventListener('click',()=>setOpen(it,!it.classList.contains('tg-open')));
+    setOpen(it,false);
+  });
+  // 3) Quick checks inside discussions
+  $$('.quick').forEach(qc=>{
+    if(!qc.children.length) return;
+    const body=document.createElement('div'); body.className='tg-body';
+    while(qc.firstChild) body.appendChild(qc.firstChild);
+    const c=document.createElement('button'); c.type='button'; c.className='tg-ctl';
+    c.innerHTML=`⚡ Quick check: test yourself ${chev}`;
+    qc.appendChild(c); qc.appendChild(body);
+    c.addEventListener('click',()=>qc.classList.toggle('tg-open'));
+  });
+  // Open a collapsed section when the side menu jumps to it
+  document.addEventListener('click',e=>{
+    const a=e.target.closest('a[href^="#"]'); if(!a) return;
+    const t=document.getElementById(a.getAttribute('href').slice(1));
+    if(t&&t.classList.contains('block')&&t.querySelector(':scope > .tg-body')) setOpen(t,true);
+  },true);
+  // Printing a worksheet: open the paper items first
+  document.addEventListener('click',e=>{
+    const b=e.target.closest('[data-print]'); if(!b) return;
+    const sec=b.closest('section.block'); if(sec){ setOpen(sec,true); $$('.paper-item',sec).forEach(it=>setOpen(it,true)); }
+  },true);
+})();
+</script>
+<!--TOGGLE-PATCH-END-->
+</body>
+</html>
