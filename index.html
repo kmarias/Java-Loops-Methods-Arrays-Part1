@@ -1410,6 +1410,7 @@ function loopLab(){
   run();
 }
 function arrayLab(){
+  if(!document.getElementById('arrCells'))return;
   const base=[31,28,31,30,31,30,31,31,30,31,30,31], mon=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   let arr=base.slice(); const cells=$('#arrCells'), idx=$('#arrIdx'), ex=$('#arrExpr');
   function draw(){
@@ -1425,6 +1426,7 @@ function arrayLab(){
   draw();
 }
 function gridLab(){
+  if(!document.getElementById('gridTbl'))return;
   const g=[[85,90,78,92],[88,76,95,81],[70,85,89,94]];
   const tbl=$('#gridTbl'), ex=$('#gridExpr'); let timer=null;
   tbl.innerHTML=`<tr><th></th>${g[0].map((_,c)=>`<th>col ${c}</th>`).join('')}</tr>`+g.map((row,r)=>`<tr><th class="rowh" data-r="${r}">row ${r}</th>${row.map((v,c)=>`<td data-r="${r}" data-c="${c}">${v}</td>`).join('')}</tr>`).join('');
@@ -1532,8 +1534,7 @@ buildQuick();
 
 
 buildTracers();
-loopLab(); arrayLab(); gridLab(); methodsBits();
-buildTOC(); refreshProg(); route();
+[loopLab,arrayLab,gridLab,methodsBits,buildTOC,refreshProg,route].forEach(fn=>{try{fn();}catch(e){console.error(fn.name,e);}});
 </script>
 <!--TOGGLE-PATCH-START-->
 <style>
